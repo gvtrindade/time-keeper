@@ -5,11 +5,11 @@
   <div class="userContainer">
     <form action="" method="post">
       <label for="userId">Id:</label>
-      <input type="text" name="userId" disabled>
+      <input type="text" name="userId" value="{{ user.id }}" disabled>
       <label for="name">Name:</label>
-      <input type="text" name="name" disabled>
+      <input type="text" name="name" value="{{ user.username }}" disabled>
       <label for="email">Email:</label>
-      <input type="email" name="email" disabled>
+      <input type="email" name="email" value="{{ user.email }}" disabled>
       <label for="role">Role:</label>
       <select name="role" class="role" disabled>
         <option value="manager">Manager</option>
@@ -24,17 +24,21 @@
         <th>Time</th>
         <th>Date</th>
         <th>Status</th>
+        <th></th>
       </tr>
+      {% for record in records %}
       <tr>
-        <td>15:27</td>
-        <td>12/24</td>
+        <td>{{ record.date|time }}</td>
+        <td>{{ record.date|date:'m/d' }}</td>
+        <td>{{ record.status }}</td>
         <td>
           <div class="editIcon"></div>
           <div class="deleteIcon"></div>
         </td>
       </tr>
+      {% endfor %}
       <tr>
-        <th>Total hours: 10h</th>
+        <th>Total hours: {{ workedHours }}h</th>
       </tr>
     </table>
   </div>

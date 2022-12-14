@@ -17,13 +17,15 @@
       <th>Date</th>
       <th>Status</th>
     </tr>
+    {% for record in records %}
     <tr>
-      <td>15:27</td>
-      <td>12/24</td>
-      <td>Approved</td>
+      <td>{{ record.date|time }}</td>
+      <td>{{ record.date|date:'m/d' }}</td>
+      <td>{{ record.status }}</td>
     </tr>
+    {% endfor %}
     <tr>
-      <th>Total hours: 10h</th>
+      <th>Total hours: {{ workedHours }}h</th>
     </tr>
   </table>
 </div>

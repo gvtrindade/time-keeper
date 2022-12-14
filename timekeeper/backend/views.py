@@ -1,43 +1,62 @@
 from django.shortcuts import render, redirect
-from .models import Record
+from .models import Record, User
+import datetime
 
 # Create your views here.
 
+
 def index(req):
-    return redirect('/auths')
+    return redirect("/auths")
+
 
 def history(req):
-    if(req.method == 'POST'):
-        user = auth.username
-        if (user):
-            record = Record()
-            record.date = date()
-            record.user = user.name
-            record.status = 'Approved'
-            date.save()
-        else:
-            message.success(req, ('Invalid user'))
-            return redirect('/history')
+    if req.method == "POST":
+        record = Record()
+        record.user = req.user
+        record.status = "Approved"
+        record.save()
+        return redirect("/history")
+        # if user:
+            
+        # else:
+        #     message.success(req, ("Invalid user"))
+        #     return redirect("/history")
     else:
         records = Record.objects.filter(user=req.user)
-        context = {'records': records}
+        context = {"records": records, "workedHours": 10}
         return render(req, "backend/history.html", context)
 
 
 def include(req):
-    return render(req, "backend/include.html")
+    if req.method == "POST":
+        record = Record()
+        record.user = req.user
+        record.save()
+        return redirect("/history")
+        # if user:
+            
+        # else:
+        #     message.success(req, ("Invalid user"))
+        #     return redirect("/history")
+    else: 
+        return render(req, "backend/include.html")
 
 
 def userList(req):
-    return render(req, "backend/userList.html")
+    users = User.objects.all
+    context = {'users': users}
+    return render(req, "backend/userList.html", context)
 
 
-def user(req, id):
-    return render(req, "backend/user.html")
+def user(req, user_id):
+    user = User.objects.get(id=user_id)
+    records = Record.objects.filter(user=user)
+    context = {'user': user, 'records': records, "workedHours": 10}
+    return render(req, "backend/user.html", context)
 
 
 def register(req):
     # if not req.user.is_authenticated:
     #     return render(req, "backend/error.html")
-        
+
     return render(req, "backend/register.html")

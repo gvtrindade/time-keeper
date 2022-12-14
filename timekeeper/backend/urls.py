@@ -8,6 +8,6 @@ urlpatterns = [
     path("history", views.history, name="history"),
     path("include", views.include, name="include"),
     path("users", views.userList, name="userList"),
-    path("users/<int:id>", views.user, name="user"),
+    path("users/<int:user_id>", views.user, name="user"),
     path("register", views.register, name="register")
 ]

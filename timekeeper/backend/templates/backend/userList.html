@@ -7,13 +7,17 @@
     <th>Name</th>
     <th></th>
   </tr>
+  {% for user in users %}
   <tr>
-    <td>0001</td>
-    <td>John Doe</td>
+    <td>{{ user.id }}</td>
+    <td>{{ user.username }}</td>
     <td>
-      <div class="editIcon"></div>
+      <a class="editIcon" href="{% url 'backend:user' user.id %}">
+        <i class="bi bi-pen"></i>
+      </a>
       <div class="deleteIcon"></div>
     </td>
   </tr>
+  {% endfor %}
 </table>
 {% endblock %}
