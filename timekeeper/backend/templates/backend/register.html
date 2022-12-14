@@ -1,0 +1,17 @@
+{% extends 'backend/base.html' %}
+
+{% block content%}
+<form action="" method="post">
+  <h2>Register Volunteer</h2>
+  <label for="name">Name:</label>
+  <input type="text" name="name">
+  <label for="email">Email:</label>
+  <input type="email" name="email">
+  <label for="role">Role:</label>
+  <select name="role" class="role">
+    <option value="manager">Manager</option>
+    <option value="volunteer">Volunteer</option>
+  </option>
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}

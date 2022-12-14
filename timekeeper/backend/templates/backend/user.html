@@ -1,0 +1,42 @@
+{% extends 'backend/base.html' %}
+
+{% block content%}
+<form action="" method="post">
+  <div class="userContainer">
+    <form action="" method="post">
+      <label for="userId">Id:</label>
+      <input type="text" name="userId" disabled>
+      <label for="name">Name:</label>
+      <input type="text" name="name" disabled>
+      <label for="email">Email:</label>
+      <input type="email" name="email" disabled>
+      <label for="role">Role:</label>
+      <select name="role" class="role" disabled>
+        <option value="manager">Manager</option>
+        <option value="volunteer">Volunteer</option>
+      </option>
+    </form>
+    <input type="submit" value="Submit" hidden>
+  </div>
+  <div class="historyContainer">
+    <table>
+      <tr>
+        <th>Time</th>
+        <th>Date</th>
+        <th>Status</th>
+      </tr>
+      <tr>
+        <td>15:27</td>
+        <td>12/24</td>
+        <td>
+          <div class="editIcon"></div>
+          <div class="deleteIcon"></div>
+        </td>
+      </tr>
+      <tr>
+        <th>Total hours: 10h</th>
+      </tr>
+    </table>
+  </div>
+</form>
+{% endblock %}

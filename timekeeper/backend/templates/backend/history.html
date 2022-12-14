@@ -1,0 +1,32 @@
+{% extends 'backend/base.html' %}
+{% load static %}
+
+{% block content%}
+<div class="clockContainer">
+  <h2 class="clock" id="clock"></h2>
+  <form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Clock-in">
+  </form>
+</div>
+
+<div class="historyContainer">
+  <table>
+    <tr>
+      <th>Time</th>
+      <th>Date</th>
+      <th>Status</th>
+    </tr>
+    <tr>
+      <td>15:27</td>
+      <td>12/24</td>
+      <td>Approved</td>
+    </tr>
+    <tr>
+      <th>Total hours: 10h</th>
+    </tr>
+  </table>
+</div>
+
+<script src="{% static 'js/history.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'backend/base.html' %}
+
+{% block content%}
+<form action="" method="post">
+  <h2>Include Clock-in</h2>
+  <label for="time">Time:</label>
+  <input type="time" name="time">
+  <label for="date">Date:</label>
+  <input type="date" name="date">
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}
