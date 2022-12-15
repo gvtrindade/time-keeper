@@ -1,46 +1,74 @@
 {% extends 'backend/base.html' %}
 
 {% block content%}
-<form action="" method="post">
-  <div class="userContainer">
-    <form action="" method="post">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+
+<div class="userContainer">
+  <form action="" method="post">
+    <p>
       <label for="userId">Id:</label>
       <input type="text" name="userId" value="{{ user.id }}" disabled>
+    </p>
+    <p>
       <label for="name">Name:</label>
       <input type="text" name="name" value="{{ user.username }}" disabled>
+      <button class="editIcon">
+        <i class="bi bi-pen"></i>
+      </button>
+    </p>
+    <p>
       <label for="email">Email:</label>
       <input type="email" name="email" value="{{ user.email }}" disabled>
+      <button class="editIcon">
+        <i class="bi bi-pen"></i>
+      </button>
+    </p>
+    <p>
       <label for="role">Role:</label>
       <select name="role" class="role" disabled>
         <option value="manager">Manager</option>
         <option value="volunteer">Volunteer</option>
-      </option>
-    </form>
-    <input type="submit" value="Submit" hidden>
-  </div>
-  <div class="historyContainer">
-    <table>
-      <tr>
-        <th>Time</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th></th>
-      </tr>
-      {% for record in records %}
-      <tr>
-        <td>{{ record.date|time }}</td>
-        <td>{{ record.date|date:'m/d' }}</td>
-        <td>{{ record.status }}</td>
-        <td>
-          <div class="editIcon"></div>
-          <div class="deleteIcon"></div>
-        </td>
-      </tr>
-      {% endfor %}
-      <tr>
-        <th>Total hours: {{ workedHours }}h</th>
-      </tr>
-    </table>
-  </div>
-</form>
+        </option>
+      </select>
+      <button class="editIcon">
+        <i class="bi bi-pen"></i>
+      </button>
+    </p>
+  </form>
+  <input type="submit" value="Submit" hidden>
+</div>
+<div class="historyContainer">
+  <table>
+    <tr>
+      <th>Time</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+    {% for record in records %}
+    <tr>
+      <td>{{ record.date|time }}</td>
+      <td>{{ record.date|date:'m/d' }}</td>
+      <td>
+        <select name="status" class="status" disabled>
+          <option value="approved">Approved</option>
+          <option value="wating_approval">Wating Approval</option>
+          </option>
+      </td>
+      <td>
+        <button class="editIcon">
+          <i class="bi bi-pen"></i>
+        </button>
+        <button class="deleteIcon">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <th>Total hours: {{ workedHours }}h</th>
+    </tr>
+  </table>
+</div>
 {% endblock %}

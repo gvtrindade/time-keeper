@@ -15,7 +15,9 @@
       <a class="editIcon" href="{% url 'backend:user' user.id %}">
         <i class="bi bi-pen"></i>
       </a>
-      <div class="deleteIcon"></div>
+      <button class="deleteIcon">
+        <i class="bi bi-trash"></i>
+      </button>
     </td>
   </tr>
   {% endfor %}
