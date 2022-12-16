@@ -6,37 +6,34 @@
 
 <div class="userContainer">
   <form action="" method="post">
+    {% csrf_token %}
     <p>
       <label for="userId">Id:</label>
       <input type="text" name="userId" value="{{ user.id }}" disabled>
     </p>
     <p>
       <label for="name">Name:</label>
-      <input type="text" name="name" value="{{ user.username }}" disabled>
-      <button class="editIcon">
+      <input type="text" id="userName" name="name" value="{{ user.username }}" >
+      <button class="editIcon" type="button" onclick="editInput('userName')">
         <i class="bi bi-pen"></i>
       </button>
     </p>
     <p>
       <label for="email">Email:</label>
-      <input type="email" name="email" value="{{ user.email }}" disabled>
-      <button class="editIcon">
+      <input type="email" id="userEmail" name="email" value="{{ user.email }}" >
+      <button class="editIcon" type="button" onclick="editInput('userEmail')">
         <i class="bi bi-pen"></i>
       </button>
     </p>
     <p>
-      <label for="role">Role:</label>
-      <select name="role" class="role" disabled>
-        <option value="manager">Manager</option>
-        <option value="volunteer">Volunteer</option>
-        </option>
-      </select>
-      <button class="editIcon">
+      <label for="role">Is Manager: </label>
+      <input type="checkbox" id="userRole" name="role" {% if user.is_staff %} checked {% endif %} >
+      <button class="editIcon" type="button" onclick="editInput('userRole')">
         <i class="bi bi-pen"></i>
       </button>
     </p>
+    <input type="submit" value="Submit">
   </form>
-  <input type="submit" value="Submit" hidden>
 </div>
 <div class="historyContainer">
   <table>
@@ -48,22 +45,30 @@
     </tr>
     {% for record in records %}
     <tr>
-      <td>{{ record.date|time }}</td>
-      <td>{{ record.date|date:'m/d' }}</td>
-      <td>
-        <select name="status" class="status" disabled>
-          <option value="approved">Approved</option>
-          <option value="wating_approval">Wating Approval</option>
-          </option>
-      </td>
-      <td>
-        <button class="editIcon">
-          <i class="bi bi-pen"></i>
-        </button>
-        <button class="deleteIcon">
-          <i class="bi bi-trash"></i>
-        </button>
-      </td>
+      <form action="" method="post">
+        {% csrf_token %}
+
+        <td>{{ record.date|time }}</td>
+        <td>{{ record.date|date:'m/d' }}</td>
+        <td>
+          <select name="status" id="record{{record.id}}" class="status">
+            <option value="Approved" {% if record.status == "Approved" %} selected {% endif %}>Approved</option>
+            <option value="Wating Approval" {% if record.status == "Wating Approval" %} selected {% endif %}>Wating Approval</option>
+            </option>
+          <input type="text" name="id" value="{{record.id}}" hidden>
+        </td>
+        <td>
+          <button class="editIcon" type="button" onclick="editInput('record{{record.id}}')">
+            <i class="bi bi-pen"></i>
+          </button>
+          <button class="deleteIcon" type="button" onclick="deleteRecord('record{{record.id}}')">
+            <i class="bi bi-trash"></i>
+          </button>
+          <input class="saveIcon" type="submit">
+            <i class="bi bi-floppy"></i>
+          </input>
+        </td>
+      </form>
     </tr>
     {% endfor %}
     <tr>
@@ -71,4 +76,5 @@
     </tr>
   </table>
 </div>
+<script src="{% static 'js/user.js' %}"></script>
 {% endblock %}

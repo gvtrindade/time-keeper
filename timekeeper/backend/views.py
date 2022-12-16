@@ -46,6 +46,20 @@ def userList(req):
 
 def user(req, user_id):
     user = User.objects.get(id=user_id)
+    if req.method == "POST":
+        if req.POST.get("name"):
+            user.username = req.POST.get("name")
+            user.email = req.POST.get("email")
+            if req.POST.get("role"):
+                user.is_staff = True
+            else:
+                user.is_staff = False
+            user.save()
+        else:
+            record = Record.objects.get(id=req.POST.get("id"))
+            record.status = req.POST.get("status")
+            record.save()
+
     records = Record.objects.filter(user=user)
     context = {"user": user, "records": records, "workedHours": 10}
     return render(req, "backend/user.html", context)
