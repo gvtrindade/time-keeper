@@ -10,7 +10,7 @@
   {% for user in users %}
   <tr>
     <td>{{ user.id }}</td>
-    <td>{{ user.username }}</td>
+    <td>{{ user.first_name }} {{ user.last_name }}</td>
     <td>
       <a class="editIcon" href="{% url 'backend:user' user.id %}">
         <i class="bi bi-pen"></i>

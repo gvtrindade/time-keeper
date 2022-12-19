@@ -18,3 +18,9 @@ def login_user(req):
 
     else:
         return render(req, "authenticate/login.html", {})
+
+def logout_user(req):
+    if(req.user.is_authenticated):
+        logout(req)
+        messages.success(req, ('Logout successful'))
+    return redirect('/auths')

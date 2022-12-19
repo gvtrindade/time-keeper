@@ -9,25 +9,32 @@
     {% csrf_token %}
     <p>
       <label for="userId">Id:</label>
-      <input type="text" name="userId" value="{{ user.id }}" disabled>
+      <input type="text" name="userId" value="{{ listed_user.id }}" disabled>
     </p>
     <p>
-      <label for="name">Name:</label>
-      <input type="text" id="userName" name="name" value="{{ user.username }}" >
-      <button class="editIcon" type="button" onclick="editInput('userName')">
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName" value="{{ listed_user.first_name }}" >
+      <button class="editIcon" type="button" onclick="editInput('firstName')">
+        <i class="bi bi-pen"></i>
+      </button>
+    </p>
+    <p>
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" value="{{ listed_user.last_name }}" >
+      <button class="editIcon" type="button" onclick="editInput('lastName')">
         <i class="bi bi-pen"></i>
       </button>
     </p>
     <p>
       <label for="email">Email:</label>
-      <input type="email" id="userEmail" name="email" value="{{ user.email }}" >
+      <input type="email" id="userEmail" name="email" value="{{ listed_user.email }}" >
       <button class="editIcon" type="button" onclick="editInput('userEmail')">
         <i class="bi bi-pen"></i>
       </button>
     </p>
     <p>
       <label for="role">Is Manager: </label>
-      <input type="checkbox" id="userRole" name="role" {% if user.is_staff %} checked {% endif %} >
+      <input type="checkbox" id="userRole" name="role" {% if listed_user.is_staff %} checked {% endif %} >
       <button class="editIcon" type="button" onclick="editInput('userRole')">
         <i class="bi bi-pen"></i>
       </button>
