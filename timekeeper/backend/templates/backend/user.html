@@ -8,8 +8,11 @@
   <form action="" method="post">
     {% csrf_token %}
     <p>
-      <label for="userId">Id:</label>
-      <input type="text" name="userId" value="{{ listed_user.id }}" disabled>
+      <label for="username">Username:</label>
+      <input type="text" name="username" value="{{ listed_user.username }}">
+      <button class="editIcon" type="button" onclick="editInput('firstName')">
+        <i class="bi bi-pen"></i>
+      </button>
     </p>
     <p>
       <label for="firstName">First Name:</label>
@@ -47,6 +50,7 @@
     <tr>
       <th>Time</th>
       <th>Date</th>
+      <th>Action</th>
       <th>Status</th>
       <th></th>
     </tr>
@@ -56,12 +60,20 @@
         {% csrf_token %}
 
         <td>{{ record.date|time }}</td>
-        <td>{{ record.date|date:'m/d' }}</td>
+        <td>{{ record.date|date:'d/m' }}</td>
         <td>
-          <select name="status" id="record{{record.id}}" class="status">
+          <select name="action" id="action{{record.id}}" class="action">
+            <option value="Clock-in" {% if record.action == "Clock-in" %} selected {% endif %}>Clock-in</option>
+            <option value="Clock-out" {% if record.action == "Clock-out" %} selected {% endif %}>Clock-out</option>
+            </option>
+          </select>
+        </td>
+        <td>
+          <select name="status" id="status{{record.id}}" class="status">
             <option value="Approved" {% if record.status == "Approved" %} selected {% endif %}>Approved</option>
             <option value="Wating Approval" {% if record.status == "Wating Approval" %} selected {% endif %}>Wating Approval</option>
             </option>
+          </select>
           <input type="text" name="id" value="{{record.id}}" hidden>
         </td>
         <td>

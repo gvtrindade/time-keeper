@@ -19,10 +19,11 @@ def history(req):
         record = Record()
         record.user = req.user
         record.status = "Approved"
+        record.action = req.POST.get('action')
         record.save()
         return redirect("/history")
     else:
-        records = Record.objects.filter(user=req.user)
+        records = Record.objects.filter(user=req.user).order_by('date__day')
         context = {"records": records, "workedHours": 10}
         return render(req, "backend/history.html", context)
 
@@ -36,6 +37,7 @@ def include(req):
         record = Record()
         record.user = req.user
         record.date = getDate(req)
+        record.action = req.POST.get('action')
         record.save()
         return redirect("/history")
     else:
@@ -72,8 +74,8 @@ def user(req, user_id):
 
     listed_user = User.objects.get(id=user_id)
     if req.method == "POST":
-        if req.POST.get("name"):
-            listed_user.username = req.POST.get("name")
+        if req.POST.get("username"):
+            listed_user.username = req.POST.get("username")
             listed_user.email = req.POST.get("email")
             if req.POST.get("role"):
                 listed_user.is_staff = True
@@ -82,6 +84,7 @@ def user(req, user_id):
             listed_user.save()
         else:
             record = Record.objects.get(id=req.POST.get("id"))
+            record.action = req.POST.get("action")
             record.status = req.POST.get("status")
             record.save()
 

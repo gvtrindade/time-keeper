@@ -8,6 +8,12 @@
   <input type="time" name="time" required>
   <label for="date">Date:</label>
   <input type="date" name="date">
+  <label for="action">Action:</label>
+  <select name="action" id="action{{record.id}}" class="action">
+    <option value="Clock-in" {% if record.action == "Clock-in" %} selected {% endif %}>Clock-in</option>
+    <option value="Clock-out" {% if record.action == "Clock-out" %} selected {% endif %}>Clock-out</option>
+    </option>
+  </select>
   <input type="submit" value="Submit" required>
 </form>
 {% endblock %}

@@ -6,7 +6,8 @@
   <h2 class="clock" id="clock"></h2>
   <form action="" method="post">
     {% csrf_token %}
-    <input type="submit" value="Clock-in">
+    <input type="submit" name="action" value="Clock-in">
+    <input type="submit" name="action" value="Clock-out">
   </form>
 </div>
 
@@ -15,12 +16,14 @@
     <tr>
       <th>Time</th>
       <th>Date</th>
+      <th>Action</th>
       <th>Status</th>
     </tr>
     {% for record in records %}
     <tr>
       <td>{{ record.date|time }}</td>
-      <td>{{ record.date|date:'m/d' }}</td>
+      <td>{{ record.date|date:'d/m' }}</td>
+      <td>{{ record.action }}</td>
       <td>{{ record.status }}</td>
     </tr>
     {% endfor %}
