@@ -16,28 +16,28 @@
     </p>
     <p>
       <label for="firstName">First Name:</label>
-      <input type="text" id="firstName" name="firstName" value="{{ listed_user.first_name }}" >
+      <input type="text" id="firstName" name="firstName" value="{{ listed_user.first_name }}">
       <button class="editIcon" type="button" onclick="editInput('firstName')">
         <i class="bi bi-pen"></i>
       </button>
     </p>
     <p>
       <label for="lastName">Last Name:</label>
-      <input type="text" id="lastName" name="lastName" value="{{ listed_user.last_name }}" >
+      <input type="text" id="lastName" name="lastName" value="{{ listed_user.last_name }}">
       <button class="editIcon" type="button" onclick="editInput('lastName')">
         <i class="bi bi-pen"></i>
       </button>
     </p>
     <p>
       <label for="email">Email:</label>
-      <input type="email" id="userEmail" name="email" value="{{ listed_user.email }}" >
+      <input type="email" id="userEmail" name="email" value="{{ listed_user.email }}">
       <button class="editIcon" type="button" onclick="editInput('userEmail')">
         <i class="bi bi-pen"></i>
       </button>
     </p>
     <p>
       <label for="role">Is Manager: </label>
-      <input type="checkbox" id="userRole" name="role" {% if listed_user.is_staff %} checked {% endif %} >
+      <input type="checkbox" id="userRole" name="role" {% if listed_user.is_staff %} checked {% endif %}>
       <button class="editIcon" type="button" onclick="editInput('userRole')">
         <i class="bi bi-pen"></i>
       </button>
@@ -54,44 +54,51 @@
       <th>Status</th>
       <th></th>
     </tr>
-    {% for record in records %}
-    <tr>
-      <form action="" method="post">
-        {% csrf_token %}
+    {% if records %}
+      {% for record in records %}
+      <tr>
+        <form action="" method="post">
+          {% csrf_token %}
 
-        <td>{{ record.date|time }}</td>
-        <td>{{ record.date|date:'d/m' }}</td>
-        <td>
-          <select name="action" id="action{{record.id}}" class="action">
-            <option value="Clock-in" {% if record.action == "Clock-in" %} selected {% endif %}>Clock-in</option>
-            <option value="Clock-out" {% if record.action == "Clock-out" %} selected {% endif %}>Clock-out</option>
-            </option>
-          </select>
-        </td>
-        <td>
-          <select name="status" id="status{{record.id}}" class="status">
-            <option value="Approved" {% if record.status == "Approved" %} selected {% endif %}>Approved</option>
-            <option value="Wating Approval" {% if record.status == "Wating Approval" %} selected {% endif %}>Wating Approval</option>
-            </option>
-          </select>
-          <input type="text" name="id" value="{{record.id}}" hidden>
-        </td>
-        <td>
-          <button class="editIcon" type="button" onclick="editInput('record{{record.id}}')">
-            <i class="bi bi-pen"></i>
-          </button>
-          <button class="deleteIcon" type="button" onclick="deleteRecord('record{{record.id}}')">
-            <i class="bi bi-trash"></i>
-          </button>
-          <input class="saveIcon" type="submit">
+          <td>{{ record.date|time }}</td>
+          <td>{{ record.date|date:'d/m' }}</td>
+          <td>
+            <select name="action" id="action{{record.id}}" class="action">
+              <option value="Clock-in" {% if record.action == "Clock-in" %} selected {% endif %}>Clock-in</option>
+              <option value="Clock-out" {% if record.action == "Clock-out" %} selected {% endif %}>Clock-out</option>
+              </option>
+            </select>
+          </td>
+          <td>
+            <select name="status" id="status{{record.id}}" class="status">
+              <option value="Approved" {% if record.status == "Approved" %} selected {% endif %}>Approved</option>
+              <option value="Wating Approval" {% if record.status == "Wating Approval" %} selected {% endif %}>Wating
+                Approval</option>
+              </option>
+            </select>
+            <input type="text" name="id" value="{{record.id}}" hidden>
+          </td>
+          <td>
+            <button class="editIcon" type="button" onclick="editInput('record{{record.id}}')">
+              <i class="bi bi-pen"></i>
+            </button>
+            <button class="deleteIcon" type="button" onclick="deleteRecord('record{{record.id}}')">
+              <i class="bi bi-trash"></i>
+            </button>
+            <input class="saveIcon" type="submit">
             <i class="bi bi-floppy"></i>
-          </input>
-        </td>
-      </form>
-    </tr>
-    {% endfor %}
+            </input>
+          </td>
+        </form>
+      </tr>
+      {% endfor %}
+    {% else %}
     <tr>
-      <th>Total hours: {{ workedHours }}h</th>
+      <td>No records found</td>
+    </tr>
+    {% endif %}
+    <tr>
+      <th>Total hours: {{ workedHours }}</th>
     </tr>
   </table>
 </div>

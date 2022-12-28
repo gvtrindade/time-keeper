@@ -9,5 +9,4 @@ urlpatterns = [
     path("include", views.include, name="include"),
     path("users", views.userList, name="userList"),
     path("users/<int:user_id>", views.user, name="user"),
-    path("register", views.register, name="register")
 ]

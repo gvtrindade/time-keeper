@@ -1,0 +1,19 @@
+{% extends 'backend/base.html' %}
+
+{% block content%}
+<form action="" method="post">
+  {% csrf_token %}
+  <h2>Register Volunteer</h2>
+  <label for="username">Username:</label>
+  <input type="text" name="username">
+  <label for="firstName">First name:</label>
+  <input type="text" name="firstName">
+  <label for="lastName">Last name:</label>
+  <input type="text" name="lastName">
+  <label for="email">Email:</label>
+  <input type="email" name="email">
+  <label for="role">Is Manager: </label>
+  <input type="checkbox" id="userRole" name="role" {% if listed_user.is_staff %} checked {% endif %}>
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}
