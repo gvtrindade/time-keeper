@@ -1,25 +1,28 @@
 {% extends 'backend/base.html' %}
 
 {% block content%}
-<table>
-  <tr>
-    <th>Id</th>
-    <th>Name</th>
-    <th></th>
-  </tr>
-  {% for user in users %}
-  <tr>
-    <td>{{ user.id }}</td>
-    <td>{{ user.first_name }} {{ user.last_name }}</td>
-    <td>
-      <a class="editIcon" href="{% url 'backend:user' user.id %}">
-        <i class="bi bi-pen"></i>
-      </a>
-      <button class="deleteIcon">
-        <i class="bi bi-trash"></i>
-      </button>
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+<div>
+  <h2>Volunteers</h2>
+  <table class="table table-striped">
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th></th>
+    </tr>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.first_name }} {{ user.last_name }}</td>
+      <td>
+        <a class="editIcon" href="{% url 'backend:user' user.id %}">
+          <i class="bi bi-pen"></i>
+        </a>
+        <button class="deleteIcon">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
 {% endblock %}

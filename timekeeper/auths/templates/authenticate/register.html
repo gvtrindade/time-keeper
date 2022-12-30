@@ -1,19 +1,29 @@
 {% extends 'backend/base.html' %}
 
 {% block content%}
-<form action="" method="post">
-  {% csrf_token %}
-  <h2>Register Volunteer</h2>
-  <label for="username">Username:</label>
-  <input type="text" name="username">
-  <label for="firstName">First name:</label>
-  <input type="text" name="firstName">
-  <label for="lastName">Last name:</label>
-  <input type="text" name="lastName">
-  <label for="email">Email:</label>
-  <input type="email" name="email">
-  <label for="role">Is Manager: </label>
-  <input type="checkbox" id="userRole" name="role" {% if listed_user.is_staff %} checked {% endif %}>
-  <input type="submit" value="Submit">
-</form>
+<div class="my-3 text-center">
+  <h2 class="mb-3">Register Volunteer</h2>
+  <form action="" method="post">
+    {% csrf_token %}
+    <div class="input-group flex-nowrap my-2">
+      <input type="text" class="form-control" placeholder="Username" name="username" />
+    </div>
+    <div class="input-group flex-nowrap my-2">
+      <input type="text" class="form-control" placeholder="First Name" name="firstName" />
+    </div>
+    <div class="input-group flex-nowrap my-2">
+      <input type="text" class="form-control" placeholder="Last Name" name="lastName" />
+    </div>
+    <div class="input-group flex-nowrap my-2">
+      <input type="email" class="form-control" placeholder="Email" name="email" />
+    </div>
+    <div class="input-group flex-nowrap my-2 mb-4 justify-content-center">
+      <span class="input-group-text" for="role">Is Manager:</span>
+      <div class="input-group-text">
+        <input type="checkbox" id="userRole" name="role">
+      </div>
+    </div>
+    <input type="submit" value="Submit">
+  </form>
+</div>
 {% endblock %}

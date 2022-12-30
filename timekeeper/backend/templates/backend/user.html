@@ -2,51 +2,79 @@
 
 {% block content%}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/user.css' %}">
 
-<div class="userContainer">
+<div class="userContainer text-center">
+  <h2>Volunteer Profile</h2>
   <form action="" method="post">
     {% csrf_token %}
+
     <p>
       <label for="username">Username:</label>
-      <input type="text" name="username" value="{{ listed_user.username }}">
-      <button class="editIcon" type="button" onclick="editInput('firstName')">
-        <i class="bi bi-pen"></i>
-      </button>
+      <div class="input-group">
+        <input type="text" class="form-control" name="username" value="{{ listed_user.username }}">
+        <div class="input-group-append">
+          <button class="editIcon btn btn-outline-secondary" type="button" onclick="editInput('username')">
+            <i class="bi bi-pen"></i>
+          </button>
+        </div>
+      </div>
     </p>
+
     <p>
       <label for="firstName">First Name:</label>
-      <input type="text" id="firstName" name="firstName" value="{{ listed_user.first_name }}">
-      <button class="editIcon" type="button" onclick="editInput('firstName')">
-        <i class="bi bi-pen"></i>
-      </button>
+      <div class="input-group">
+        <input type="text" class="form-control" name="username" value="{{ listed_user.first_name }}">
+        <div class="input-group-append">
+          <button class="editIcon btn btn-outline-secondary" type="button" onclick="editInput('firstName')">
+            <i class="bi bi-pen"></i>
+          </button>
+        </div>
+      </div>
     </p>
+
     <p>
       <label for="lastName">Last Name:</label>
-      <input type="text" id="lastName" name="lastName" value="{{ listed_user.last_name }}">
-      <button class="editIcon" type="button" onclick="editInput('lastName')">
-        <i class="bi bi-pen"></i>
-      </button>
+      <div class="input-group">
+        <input type="text" class="form-control" name="username" value="{{ listed_user.last_name }}">
+        <div class="input-group-append">
+          <button class="editIcon btn btn-outline-secondary" type="button" onclick="editInput('lastName')">
+            <i class="bi bi-pen"></i>
+          </button>
+        </div>
+      </div>
     </p>
+
     <p>
       <label for="email">Email:</label>
-      <input type="email" id="userEmail" name="email" value="{{ listed_user.email }}">
-      <button class="editIcon" type="button" onclick="editInput('userEmail')">
-        <i class="bi bi-pen"></i>
-      </button>
+      <div class="input-group">
+        <input type="email" class="form-control" name="username" value="{{ listed_user.email }}">
+        <div class="input-group-append">
+          <button class="editIcon btn btn-outline-secondary" type="button" onclick="editInput('email')">
+            <i class="bi bi-pen"></i>
+          </button>
+        </div>
+      </div>
     </p>
+
     <p>
-      <label for="role">Is Manager: </label>
-      <input type="checkbox" id="userRole" name="role" {% if listed_user.is_staff %} checked {% endif %}>
-      <button class="editIcon" type="button" onclick="editInput('userRole')">
-        <i class="bi bi-pen"></i>
-      </button>
+      <div class="input-group flex-nowrap my-2 mb-4 justify-content-center">
+        <span class="input-group-text" for="role">Is Manager:</span>
+        <div class="input-group-text">
+          <input type="checkbox" id="userRole" name="role" {% if listed_user.is_staff %} checked {% endif %}>
+        </div>
+        <button class="editIcon btn btn-outline-secondary" type="button" onclick="editInput('userRole')">
+          <i class="bi bi-pen"></i>
+        </button>
+      </div>
     </p>
+
     <input type="submit" value="Submit">
   </form>
 </div>
-<div class="historyContainer">
-  <table>
+<div class="historyContainer text-center mu-4 py-3">
+  <h3>History</h3>
+  <h4>Total worked hours: {{ workedHours }}</h4>
+  <table class="table">
     <tr>
       <th>Time</th>
       <th>Date</th>
@@ -97,9 +125,6 @@
       <td>No records found</td>
     </tr>
     {% endif %}
-    <tr>
-      <th>Total hours: {{ workedHours }}</th>
-    </tr>
   </table>
 </div>
 <script src="{% static 'js/user.js' %}"></script>
