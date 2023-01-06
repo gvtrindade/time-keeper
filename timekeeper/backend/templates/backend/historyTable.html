@@ -1,0 +1,107 @@
+{% load static %}
+{% block history %}
+<div class="historyContainer pb-3">
+  <h4 class="text-center mb-2 p-3">Total worked hours: {{ workedHours }}</h4>
+
+  <div class="input-group flex-nowrap my-2 mb-4 justify-content-center">
+    <span class="input-group-text">
+      <a href="?month=false&year={{year}}&number={{number}}">Week</a>
+    </span>
+    <div class="input-group-text">
+      <a href="?month=true&year={{year}}&number={{number}}">Month</a>
+    </div>
+  </div>
+
+  <select onchange="onChangeSelect('{{month}}', event.srcElement.value, '{{number}}')">
+    {% for optionYear in years %}
+    <option value="{{optionYear}}" {% if optionYear == year|add:0 %} selected {% endif %}>{{optionYear}}</option>
+    {% endfor %}
+  </select>
+
+  <nav aria-label="Page navigation example" class="justify-content-center">
+    <ul class="pagination">
+
+      <li class="page-item">
+        <a class="page-link" href="?month={{month}}&year={{year}}&number={{number|add:'-1'}}" 
+        {% if number|add:'-1' == 0 %} style="pointer-events: none; background-color: rgb(235, 235, 235);" {% endif %}>
+          << 
+        </a>
+      </li>
+
+      <li class="page-item">
+        <select onchange="onChangeSelect('{{month}}', '{{year}}', event.srcElement.value)">
+          {% for optionNumber in range %}
+          <option value="{{optionNumber}}" {% if optionNumber == number|add:0 %} selected {% endif %}>{{optionNumber}}</option>
+          {% endfor %}
+        </select>
+      </li>
+      
+      <li class="page-item">
+        <a class="page-link" href="?month={{month}}&year={{year}}&number={{number|add:1}}" 
+        {% if month == 'true' and number|add:1 == 13 or month == 'false' and number|add:1 == 53 %}
+          style="pointer-events: none; background-color: rgb(235, 235, 235);" {% endif %}>
+          >> 
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <table class="table table-striped">
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Time</th>
+      <th scope="col">Action</th>
+      <th scope="col">Status</th>
+      {% if not isHistory %}
+      <th></th>
+      {% endif %}
+    </tr>
+    
+    {% if records %}
+    {% for record in records %}
+    <tr>
+        <form action="" method="post">
+          {% csrf_token %}
+          <td>{{ record.date|date:'d/m' }}</td>
+          <td>{{ record.date|time }}</td>
+          <td><span name="action">{{ record.action }}</span></td>
+          <td>
+            {% if isHistory %}
+              {{ record.status }}
+            {% else %}
+            <select name="status" id="status{{record.id}}" class="status">
+              <option value="Approved" {% if record.status == "Approved" %} selected {% endif %}>Approved</option>
+              <option value="Wating Approval" {% if record.status == "Wating Approval" %} selected {% endif %}>Wating
+                Approval</option>
+              </option>
+            </select>
+            <input type="text" name="id" value="{{record.id}}" hidden>
+            {% endif %}
+          </td>
+          {% if not isHistory %}
+          <td>
+            <button class="editIcon" type="button" onclick="editInput('record{{record.id}}')">
+              <i class="bi bi-pen"></i>
+            </button>
+            <button class="deleteIcon" type="button" onclick="deleteRecord('{{record.id}}')">
+              <i class="bi bi-trash"></i>
+            </button>
+            <input class="saveIcon" type="submit">
+            <i class="bi bi-floppy"></i>
+            </input>
+          </td>
+          {% endif %}
+        </form>
+      </tr>
+      {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="100%" class="text-center">No records found</td>
+    </tr>
+    {% endif %}
+
+  </table>
+</div>
+
+<script src="{% static 'js/historyTable.js' %}"></script>
+{% endblock history %}

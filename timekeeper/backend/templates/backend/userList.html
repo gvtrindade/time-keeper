@@ -1,6 +1,9 @@
 {% extends 'backend/base.html' %}
 
 {% block content%}
+{% load static %}
+{% csrf_token %}
+
 <div>
   <h2>Volunteers</h2>
   <table class="table table-striped">
@@ -9,20 +12,25 @@
       <th>Name</th>
       <th></th>
     </tr>
+
     {% for user in users %}
     <tr>
       <td>{{ user.id }}</td>
       <td>{{ user.first_name }} {{ user.last_name }}</td>
       <td>
-        <a class="editIcon" href="{% url 'backend:user' user.id %}">
+        <a class="editIcon" href="{% url 'backend:user' user.id %}?month=false&year={% now 'Y' %}&number={% now 'W' %}">
           <i class="bi bi-pen"></i>
         </a>
-        <button class="deleteIcon">
+        <button class="deleteIcon" onclick="deleteUser('{{user.id}}')">
           <i class="bi bi-trash"></i>
         </button>
       </td>
     </tr>
     {% endfor %}
+
   </table>
 </div>
+
+<script src="{% static 'js/userList.js' %}"></script>
+
 {% endblock %}

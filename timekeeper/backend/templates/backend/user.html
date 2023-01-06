@@ -71,61 +71,8 @@
     <input type="submit" value="Submit">
   </form>
 </div>
-<div class="historyContainer text-center mu-4 py-3">
-  <h3>History</h3>
-  <h4>Total worked hours: {{ workedHours }}</h4>
-  <table class="table">
-    <tr>
-      <th>Time</th>
-      <th>Date</th>
-      <th>Action</th>
-      <th>Status</th>
-      <th></th>
-    </tr>
-    {% if records %}
-      {% for record in records %}
-      <tr>
-        <form action="" method="post">
-          {% csrf_token %}
 
-          <td>{{ record.date|time }}</td>
-          <td>{{ record.date|date:'d/m' }}</td>
-          <td>
-            <select name="action" id="action{{record.id}}" class="action">
-              <option value="Clock-in" {% if record.action == "Clock-in" %} selected {% endif %}>Clock-in</option>
-              <option value="Clock-out" {% if record.action == "Clock-out" %} selected {% endif %}>Clock-out</option>
-              </option>
-            </select>
-          </td>
-          <td>
-            <select name="status" id="status{{record.id}}" class="status">
-              <option value="Approved" {% if record.status == "Approved" %} selected {% endif %}>Approved</option>
-              <option value="Wating Approval" {% if record.status == "Wating Approval" %} selected {% endif %}>Wating
-                Approval</option>
-              </option>
-            </select>
-            <input type="text" name="id" value="{{record.id}}" hidden>
-          </td>
-          <td>
-            <button class="editIcon" type="button" onclick="editInput('record{{record.id}}')">
-              <i class="bi bi-pen"></i>
-            </button>
-            <button class="deleteIcon" type="button" onclick="deleteRecord('record{{record.id}}')">
-              <i class="bi bi-trash"></i>
-            </button>
-            <input class="saveIcon" type="submit">
-            <i class="bi bi-floppy"></i>
-            </input>
-          </td>
-        </form>
-      </tr>
-      {% endfor %}
-    {% else %}
-    <tr>
-      <td>No records found</td>
-    </tr>
-    {% endif %}
-  </table>
-</div>
+{% include './historyTable.html' %}
+
 <script src="{% static 'js/user.js' %}"></script>
 {% endblock %}

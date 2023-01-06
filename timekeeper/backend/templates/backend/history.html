@@ -1,9 +1,9 @@
 {% extends 'backend/base.html' %}
 {% load static %}
 
-{% block content%}
+{% block content %}
 <div class="clockContainer w-100 p-3 mb-3 text-center">
-  <h2 class="clock fs-1" id="clock"></h2>
+  <h2 class="clock fs-1" id="clock">00:00:00 AM</h2>
   <form action="" method="post">
     {% csrf_token %}
     <input type="submit" name="action" value="Clock-in">
@@ -11,25 +11,7 @@
   </form>
 </div>
 
-<div class="historyContainer pb-3">
-  <h4 class="text-center mb-2 p-3">Total worked hours: {{ workedHours }}</h4>
-  <table class="table table-striped">
-    <tr>
-      <th scope="col">Date</th>
-      <th scope="col">Time</th>
-      <th scope="col">Action</th>
-      <th scope="col">Status</th>
-    </tr>
-    {% for record in records %}
-    <tr>
-      <td>{{ record.date|date:'d/m' }}</td>
-      <td>{{ record.date|time }}</td>
-      <td>{{ record.action }}</td>
-      <td>{{ record.status }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
+{% include './historyTable.html' %}
 
 <script src="{% static 'js/history.js' %}"></script>
-{% endblock %}
+{% endblock content %}
