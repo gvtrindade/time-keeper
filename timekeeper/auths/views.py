@@ -1,12 +1,16 @@
 import os
 
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
-
+from django.contrib.auth.views import PasswordChangeView
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
 from datetime import datetime
+
+from .forms import PasswordChangingForm
 
 
 def login_user(req):
@@ -28,7 +32,6 @@ def login_user(req):
 
     else:
         return render(req, "authenticate/login.html", {})
-
 
 
 def logout_user(req):
@@ -86,3 +89,9 @@ def send_register_email(user, password):
         recipient_list=[user.email],
         fail_silently=False,
     )
+
+
+class PasswordsChangeView(PasswordChangeView):
+    form_class = PasswordChangingForm
+    current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
+    success_url = f"/history{current_week}"
