@@ -3,7 +3,7 @@
 <div class="historyContainer pb-3">
   <h4 class="text-center mb-2 p-3">Total worked hours: {{ workedHours }}</h4>
 
-  <div class="input-group flex-nowrap my-2 mb-4 justify-content-center">
+  <div class="input-group flex-nowrap my-2 justify-content-center">
     <span class="input-group-text">
       <a href="?month=false&year={{year}}&number={{number}}">Week</a>
     </span>
@@ -12,39 +12,53 @@
     </div>
   </div>
 
-  <select onchange="onChangeSelect('{{month}}', event.srcElement.value, '{{number}}')">
-    {% for optionYear in years %}
-    <option value="{{optionYear}}" {% if optionYear == year|add:0 %} selected {% endif %}>{{optionYear}}</option>
-    {% endfor %}
-  </select>
+  <div class="nav justify-content-center">
 
-  <nav aria-label="Page navigation example" class="justify-content-center">
-    <ul class="pagination">
-
-      <li class="page-item">
-        <a class="page-link" href="?month={{month}}&year={{year}}&number={{number|add:'-1'}}" 
-        {% if number|add:'-1' == 0 %} style="pointer-events: none; background-color: rgb(235, 235, 235);" {% endif %}>
-          << 
-        </a>
-      </li>
-
-      <li class="page-item">
-        <select onchange="onChangeSelect('{{month}}', '{{year}}', event.srcElement.value)">
-          {% for optionNumber in range %}
-          <option value="{{optionNumber}}" {% if optionNumber == number|add:0 %} selected {% endif %}>{{optionNumber}}</option>
+    <nav aria-label="Week/Month navigation" class="border rounded mb-4" style="width: fit-content;">
+      <div class="topSection border-bottom justify-content-center">
+        <select class="border-0 py-1" style="width: 100%; text-align: center" onchange="onChangeSelect('{{month}}', event.srcElement.value, '{{number}}')">
+          {% for optionYear in years %}
+          <option value="{{optionYear}}" {% if optionYear == year|add:0 %} selected {% endif %}>{{optionYear}}</option>
           {% endfor %}
         </select>
-      </li>
-      
-      <li class="page-item">
-        <a class="page-link" href="?month={{month}}&year={{year}}&number={{number|add:1}}" 
-        {% if month == 'true' and number|add:1 == 13 or month == 'false' and number|add:1 == 53 %}
-          style="pointer-events: none; background-color: rgb(235, 235, 235);" {% endif %}>
-          >> 
-        </a>
-      </li>
-    </ul>
-  </nav>
+      </div>
+  
+      <div class="bottomSection justify-content-center">
+        <ul class="d-flex m-0 p-0" style="list-style: none;">
+          <li class="my-1">
+            <a class="mx-2 py-1 text-decoration-none text-muted" href="?month={{month}}&year={{year}}&number={{number|add:'-1'}}" {% if number|add:'-1' == 0 %}
+            style="pointer-events: none;" {% endif %}>
+              {% if number|add:'-1' == 0 %}
+              <i class="bi bi-caret-left"></i>
+              {% else %}
+              <i class="bi bi-caret-left-fill"></i>
+              {% endif %}
+            </a>
+          </li>
+    
+          <li class="border-start border-end">
+            <select class="py-1 px-1 border-0" onchange="onChangeSelect('{{month}}', '{{year}}', event.srcElement.value)">
+              {% for optionNumber in range %}
+              <option value="{{optionNumber}}" {% if optionNumber == number|add:0 %} selected {% endif %}>{{optionNumber}}</option>
+              {% endfor %}
+            </select>
+          </li>
+          
+          <li class="my-1">
+            <a class="mx-2 py-1 text-decoration-none text-muted" href="?month={{month}}&year={{year}}&number={{number|add:1}}" 
+            {% if month == 'true' and number|add:1 == 13 or month == 'false' and number|add:1 == 53 %}
+            style="pointer-events: none;" {% endif %}>
+            {% if month == 'true' and number|add:1 == 13 or month == 'false' and number|add:1 == 53 %}
+            <i class="bi bi-caret-right"></i>
+            {% else %}
+            <i class="bi bi-caret-right-fill"></i>
+            {% endif %}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
 
   <table class="table table-striped">
     <tr>

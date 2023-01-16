@@ -30,7 +30,8 @@ def history(req):
         try:
             records = getRecords(req)
             earliest_Record = (
-                Record.objects.filter(user=req.user).earliest("date__year").date.year
+                Record.objects.filter(user=req.user).earliest(
+                    "date__year").date.year
             )
             context = {
                 "records": records,
@@ -43,7 +44,7 @@ def history(req):
                 "years": range(datetime.now().year, datetime.now().year + 1),
             }
 
-        context = { 
+        context = {
             **context,
             "isHistory": True,
             "year": req.GET.get("year"),
@@ -51,7 +52,6 @@ def history(req):
             "number": req.GET.get("number"),
             "range": range(1, 13) if req.GET.get("month") == "true" else range(1, 53),
         }
-        context.update()
         return render(req, "backend/history.html", context)
 
 
@@ -121,7 +121,8 @@ def user(req, user_id):
     try:
         records = getRecords(req)
         earliest_Record = (
-            Record.objects.filter(user=listed_user).earliest("date__year").date.year
+            Record.objects.filter(user=listed_user).earliest(
+                "date__year").date.year
         )
 
         context = {
@@ -176,13 +177,15 @@ def calculateWorkedHours(records):
     )
 
     for record in check_in_records:
-        record_index = next(i for i, x in enumerate(list(records)) if x.id == record.id)
+        record_index = next(i for i, x in enumerate(
+            list(records)) if x.id == record.id)
         if record_index + 1 < len(records) and (
             records[record_index].date.day == records[record_index + 1].date.day
             and records[record_index + 1].action == "Clock-out"
             and records[record_index + 1].status == "Approved"
         ):
-            worked_hours += records[record_index + 1].date - records[record_index].date
+            worked_hours += records[record_index +
+                                    1].date - records[record_index].date
 
     worked_seconds = worked_hours.seconds
     return "{:02}h{:02}".format(worked_seconds // 3600, worked_seconds % 3600 // 60)
@@ -200,3 +203,18 @@ def delete_user(req, user_id):
     user = User.objects.get(pk=user_id)
     user.delete()
     return HttpResponseRedirect("/users")
+
+
+def handler404(req, exception):
+    context = {"error_code": 404}
+    return render(req, "backend/error.html", context)
+
+
+def handler403(req, exception):
+    context = {"error_code": 403}
+    return render(req, "backend/error.html", context)
+
+
+def handler500(req, exception=''):
+    context = {"error_code": 500}
+    return render(req, "backend/error.html", context)
