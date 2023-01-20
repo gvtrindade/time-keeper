@@ -80,7 +80,11 @@ def include(request):
 
 
 def get_date(request):
-    datetime_str = f'{request.POST.get("date")} {request.POST.get("time")}'
+    time = request.POST.get("time")
+    time_period = request.POST.get("timePeriod")
+    if time_period == "PM":
+        time = f'{int(time[:2]) + 12}:{time[4:]}'
+    datetime_str = f'{request.POST.get("date")} {time}'
     return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
 
 
@@ -129,6 +133,8 @@ def user(request, user_id):
             listed_user.save()
         else:
             record = Record.objects.get(id=request.POST.get("id"))
+            record.date = get_date(request)
+            record.action = request.POST.get("action")
             record.status = request.POST.get("status")
             record.save()
 
