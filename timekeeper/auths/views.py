@@ -1,12 +1,11 @@
 import os
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordChangeView
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy, reverse
-from datetime import datetime
 
 from .forms import PasswordChangingForm
 from .models import CustomUser
@@ -24,13 +23,12 @@ def login_user(request):
 
         if user is not None:
             login(request, user)
-            userData = CustomUser.objects.get(id=request.user.id)
-            if not userData.is_resetpwd:
+            if not user.is_password_reset:
+                messages.success(request, "You must reset your password before accessing the application")
                 return redirect("/auths/password")
             return redirect(f"/history{current_week}")
         else:
-            messages.success(
-                request, ("There was an error loggin in, try again"))
+            messages.success(request, "There was an error logging in, try again")
             return redirect("/auths")
 
     else:
@@ -40,7 +38,7 @@ def login_user(request):
 def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
-        messages.success(request, ("Logout successful"))
+        messages.success(request, "Logout successful")
     return redirect("/auths")
 
 
@@ -48,11 +46,14 @@ def register_user(request):
     current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
 
     if not request.user.is_authenticated:
-        messages.success(request, ("You must login to access this page"))
+        messages.success(request, "You must login to access this page")
         return redirect("/auths")
+    elif not request.user.is_password_reset:
+        messages.success(request, "You must reset your password before accessing the application")
+        return redirect("/auths/password")
 
     if not request.user.is_staff:
-        messages.success(request, ("You can't access this page"))
+        messages.success(request, "You can't access this page")
         return redirect(f"/history{current_week}")
 
     if request.method == "POST":
@@ -100,5 +101,5 @@ class PasswordsChangeView(PasswordChangeView):
     success_url = f"/history{current_week}"
 
     def form_valid(self, form):
-        form.user.is_resetpwd = True
+        form.user.is_password_reset = True
         return super().form_valid(form)

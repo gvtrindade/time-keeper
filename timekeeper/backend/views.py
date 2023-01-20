@@ -14,8 +14,11 @@ def index(request):
 
 def history(request):
     if not request.user.is_authenticated:
-        messages.success(request, ("You must login to access this page"))
+        messages.success(request, "You must login to access this page")
         return redirect("/auths")
+    elif not request.user.is_password_reset:
+        messages.success(request, "You must reset your password before accessing the application")
+        return redirect("/auths/password")
 
     if request.method == "POST":
         record = Record()
@@ -28,15 +31,15 @@ def history(request):
 
     else:
         try:
-            records = getRecords(request)
-            earliest_Record = (
+            records = get_records(request)
+            earliest_record = (
                 Record.objects.filter(user=request.user).earliest(
                     "date__year").date.year
             )
             context = {
                 "records": records,
-                "workedHours": calculateWorkedHours(records),
-                "years": range(earliest_Record, datetime.now().year + 1),
+                "workedHours": calculate_worked_hours(records),
+                "years": range(earliest_record, datetime.now().year + 1),
             }
         except:
             context = {
@@ -57,13 +60,16 @@ def history(request):
 
 def include(request):
     if not request.user.is_authenticated:
-        messages.success(request, ("You must login to access this page"))
+        messages.success(request, "You must login to access this page")
         return redirect("/auths")
+    elif not request.user.is_password_reset:
+        messages.success(request, "You must reset your password before accessing the application")
+        return redirect("/auths/password")
 
     if request.method == "POST":
         record = Record()
         record.user = request.user
-        record.date = getDate(request)
+        record.date = get_date(request)
         record.action = request.POST.get("action")
         record.save()
         current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
@@ -73,19 +79,22 @@ def include(request):
         return render(request, "backend/include.html")
 
 
-def getDate(request):
+def get_date(request):
     datetime_str = f'{request.POST.get("date")} {request.POST.get("time")}'
     return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
 
 
-def userList(request):
+def user_list(request):
     current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
     if not request.user.is_authenticated:
-        messages.success(request, ("You must login to access this page"))
+        messages.success(request, "You must login to access this page")
         return redirect("/auths")
+    elif not request.user.is_password_reset:
+        messages.success(request, "You must reset your password before accessing the application")
+        return redirect("/auths/password")
 
     if not request.user.is_staff:
-        messages.success(request, ("You can't access this page"))
+        messages.success(request, "You can't access this page")
         return redirect(f"/history{current_week}")
 
     users = CustomUser.objects.all
@@ -96,11 +105,14 @@ def userList(request):
 def user(request, user_id):
     current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
     if not request.user.is_authenticated:
-        messages.success(request, ("You must login to access this page"))
+        messages.success(request, "You must login to access this page")
         return redirect("/auths")
+    elif not request.user.is_password_reset:
+        messages.success(request, "You must reset your password before accessing the application")
+        return redirect("/auths/password")
 
     if not request.user.is_staff:
-        messages.success(request, ("You can't access this page"))
+        messages.success(request, "You can't access this page")
         return redirect(f"/history{current_week}")
 
     listed_user = CustomUser.objects.get(id=user_id)
@@ -121,8 +133,8 @@ def user(request, user_id):
             record.save()
 
     try:
-        records = getRecords(request)
-        earliest_Record = (
+        records = get_records(request)
+        earliest_record = (
             Record.objects.filter(user=listed_user).earliest(
                 "date__year").date.year
         )
@@ -130,8 +142,8 @@ def user(request, user_id):
         context = {
             "listed_user": listed_user,
             "records": records,
-            "workedHours": calculateWorkedHours(records),
-            "years": range(earliest_Record, datetime.now().year + 1),
+            "workedHours": calculate_worked_hours(records),
+            "years": range(earliest_record, datetime.now().year + 1),
         }
     except:
         context = {
@@ -152,7 +164,7 @@ def user(request, user_id):
     return render(request, "backend/user.html", context)
 
 
-def getRecords(request):
+def get_records(request):
     year = request.GET.get("year") if request.GET.get(
         "year") else datetime.now().year
     number = (
@@ -170,7 +182,7 @@ def getRecords(request):
     return Record.objects.filter(query).order_by("date__day", "date__hour")
 
 
-def calculateWorkedHours(records):
+def calculate_worked_hours(records):
     worked_hours = timedelta(0)
     check_in_records = list(
         filter(
@@ -202,9 +214,9 @@ def delete_record(request, record_id):
         return HttpResponseRedirect("/history")
 
 
-def delete_user(request, user_id):
-    user = CustomUser.objects.get(pk=user_id)
-    user.delete()
+def delete_user(user_id):
+    deleted_user = CustomUser.objects.get(pk=user_id)
+    deleted_user.delete()
     return HttpResponseRedirect("/users")
 
 
