@@ -1,78 +1,8 @@
-{% extends 'backend/base.html' %}
+{% extends 'backend/base.html' %} {% block content%} {% load static %}
 
-{% block content%}
-{% load static %}
-
-<div class="userContainer text-center">
-  <h2>Volunteer Profile</h2>
-  <form action="" method="post">
-    {% csrf_token %}
-
-    <p>
-      <label for="username">Username:</label>
-      <div class="input-group">
-        <input type="text" class="form-control" name="username" value="{{ listed_user.username }}">
-        <div class="input-group-append">
-          <button class="editIcon btn btn-outline-secondary" type="button" onclick="editInput('username')">
-            <i class="bi bi-pen"></i>
-          </button>
-        </div>
-      </div>
-    </p>
-
-    <p>
-      <label for="firstName">First Name:</label>
-      <div class="input-group">
-        <input type="text" class="form-control" name="username" value="{{ listed_user.first_name }}">
-        <div class="input-group-append">
-          <button class="editIcon btn btn-outline-secondary" type="button" onclick="editInput('firstName')">
-            <i class="bi bi-pen"></i>
-          </button>
-        </div>
-      </div>
-    </p>
-
-    <p>
-      <label for="lastName">Last Name:</label>
-      <div class="input-group">
-        <input type="text" class="form-control" name="username" value="{{ listed_user.last_name }}">
-        <div class="input-group-append">
-          <button class="editIcon btn btn-outline-secondary" type="button" onclick="editInput('lastName')">
-            <i class="bi bi-pen"></i>
-          </button>
-        </div>
-      </div>
-    </p>
-
-    <p>
-      <label for="email">Email:</label>
-      <div class="input-group">
-        <input type="email" class="form-control" name="username" value="{{ listed_user.email }}">
-        <div class="input-group-append">
-          <button class="editIcon btn btn-outline-secondary" type="button" onclick="editInput('email')">
-            <i class="bi bi-pen"></i>
-          </button>
-        </div>
-      </div>
-    </p>
-
-    <p>
-      <div class="input-group flex-nowrap my-2 mb-4 justify-content-center">
-        <span class="input-group-text" for="role">Is Manager:</span>
-        <div class="input-group-text">
-          <input type="checkbox" id="userRole" name="role" {% if listed_user.is_staff %} checked {% endif %}>
-        </div>
-        <button class="editIcon btn btn-outline-secondary" type="button" onclick="editInput('userRole')">
-          <i class="bi bi-pen"></i>
-        </button>
-      </div>
-    </p>
-
-    <input type="submit" value="Submit">
-  </form>
+<div>
+  {% include 'auths/volunteerForm.html' %} {% include './historyTable.html' %}
 </div>
-
-{% include './historyTable.html' %}
 
 <script src="{% static 'js/user.js' %}"></script>
 {% endblock %}

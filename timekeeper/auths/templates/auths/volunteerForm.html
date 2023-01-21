@@ -1,0 +1,50 @@
+<div class="userContainer text-center">
+  {% if 'register' in request.path %}
+  <h2 class="mb-3 fs-1">Register Volunteer</h2>
+  {% else %}
+  <h2 class="mb-3 fs-1">Volunteer Profile</h2>
+  {% endif %}
+
+  <form action="" method="post">
+    {% csrf_token %}
+
+    <p>
+      <div class="input-group">
+        <span class="input-group-text">Username</span>
+        <input type="text" class="form-control" name="username" value="{{ listed_user.username }}" required>
+      </div>
+    </p>
+    
+    <p>
+      <div class="input-group">
+        <span class="input-group-text">First Name</span>
+        <input type="text" class="form-control" name="firstName" value="{{ listed_user.first_name }}" required>
+      </div>
+    </p>
+    
+    <p>
+      <div class="input-group">
+        <span class="input-group-text">Last Name</span>
+        <input type="text" class="form-control" name="lastName" value="{{ listed_user.last_name }}" required>
+      </div>
+    </p>
+    
+    <p>
+      <div class="input-group">
+        <span class="input-group-text">Email</span>
+        <input type="email" class="form-control" name="email" value="{{ listed_user.email }}" required>
+      </div>
+    </p>
+
+    <p>
+      <div class="input-group flex-nowrap my-2 mb-4 justify-content-center">
+        <span class="input-group-text" for="role">Is Manager:</span>
+        <div class="input-group-text">
+          <input type="checkbox" id="userRole" name="role" {% if listed_user.is_staff %} checked {% endif %}>
+        </div>
+      </div>
+    </p>
+
+    <input type="submit" class="btn btn-primary" value="{% if 'register' in request.path %}Register{% else %}Edit{% endif %} Volunteer">
+  </form>
+</div>

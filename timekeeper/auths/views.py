@@ -5,7 +5,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordChangeView
 from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+
 
 from .forms import PasswordChangingForm
 from .models import CustomUser
@@ -24,11 +26,13 @@ def login_user(request):
         if user is not None:
             login(request, user)
             if not user.is_password_reset:
-                messages.success(request, "You must reset your password before accessing the application")
+                messages.success(
+                    request, "You must reset your password before accessing the application")
                 return redirect("/auths/password")
             return redirect(f"/history{current_week}")
         else:
-            messages.success(request, "There was an error logging in, try again")
+            messages.success(
+                request, "There was an error logging in, try again")
             return redirect("/auths")
 
     else:
@@ -49,7 +53,8 @@ def register_user(request):
         messages.success(request, "You must login to access this page")
         return redirect("/auths")
     elif not request.user.is_password_reset:
-        messages.success(request, "You must reset your password before accessing the application")
+        messages.success(
+            request, "You must reset your password before accessing the application")
         return redirect("/auths/password")
 
     if not request.user.is_staff:
@@ -77,6 +82,16 @@ def register_user(request):
         return redirect("/users")
     else:
         return render(request, "auths/register.html")
+
+
+def delete_user(request, user_id):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        messages.success(request, "You must login to access this page")
+        return redirect("/auths")
+    if request.method == "DELETE":
+        deleted_user = CustomUser.objects.get(pk=user_id)
+        deleted_user.delete()
+        return HttpResponseRedirect("/users")
 
 
 def send_register_email(user, password):

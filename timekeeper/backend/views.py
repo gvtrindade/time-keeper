@@ -17,7 +17,8 @@ def history(request):
         messages.success(request, "You must login to access this page")
         return redirect("/auths")
     elif not request.user.is_password_reset:
-        messages.success(request, "You must reset your password before accessing the application")
+        messages.success(
+            request, "You must reset your password before accessing the application")
         return redirect("/auths/password")
 
     if request.method == "POST":
@@ -58,7 +59,8 @@ def include(request):
         messages.success(request, "You must login to access this page")
         return redirect("/auths")
     elif not request.user.is_password_reset:
-        messages.success(request, "You must reset your password before accessing the application")
+        messages.success(
+            request, "You must reset your password before accessing the application")
         return redirect("/auths/password")
 
     if request.method == "POST":
@@ -75,7 +77,8 @@ def user_list(request):
         messages.success(request, "You must login to access this page")
         return redirect("/auths")
     elif not request.user.is_password_reset:
-        messages.success(request, "You must reset your password before accessing the application")
+        messages.success(
+            request, "You must reset your password before accessing the application")
         return redirect("/auths/password")
 
     if not request.user.is_staff:
@@ -93,7 +96,8 @@ def user(request, user_id):
         messages.success(request, "You must login to access this page")
         return redirect("/auths")
     elif not request.user.is_password_reset:
-        messages.success(request, "You must reset your password before accessing the application")
+        messages.success(
+            request, "You must reset your password before accessing the application")
         return redirect("/auths/password")
 
     if not request.user.is_staff:
@@ -160,7 +164,8 @@ def get_date(request):
     time = request.POST.get("time")
     time_period = request.POST.get("timePeriod")
     if time_period == "PM":
-        hours = ZERO_HOUR if int(time[:2]) + TWELVE_HOURS == TWENTY_FOUR_HOURS else int(time[:2]) + TWELVE_HOURS
+        hours = ZERO_HOUR if int(
+            time[:2]) + TWELVE_HOURS == TWENTY_FOUR_HOURS else int(time[:2]) + TWELVE_HOURS
         minutes = time[3:]
         time = f'{hours}:{minutes}'
     datetime_str = f'{request.POST.get("date")} {time}'
@@ -188,7 +193,8 @@ def get_records(request):
 def create_record(request):
     record = Record()
     record.user = request.user
-    record.status = "Wating Approval" if request.POST.get("date") else "Approved"
+    record.status = "Wating Approval" if request.POST.get(
+        "date") else "Approved"
     record.action = request.POST.get("action")
     if request.POST.get("date"):
         record.date = get_date(request)
@@ -223,23 +229,21 @@ def calculate_worked_hours(records):
                                     1].date - records[record_index].date
             break_duration_sum += records[record_index + 1].break_duration
 
-    worked_seconds = worked_hours.seconds - (break_duration_sum * SIXTY_SECONDS)
+    worked_seconds = worked_hours.seconds - \
+        (break_duration_sum * SIXTY_SECONDS)
 
     return "{:02}h{:02}".format(worked_seconds // 3600, worked_seconds % 3600 // 60)
 
 
 def delete_record(request, record_id):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        messages.success(request, "You must login to access this page")
+        return redirect("/auths")
     if request.method == "DELETE":
         print("Record: ", record_id)
         record = Record.objects.get(pk=record_id)
         record.delete()
         return HttpResponseRedirect("/history")
-
-
-def delete_user(user_id):
-    deleted_user = CustomUser.objects.get(pk=user_id)
-    deleted_user.delete()
-    return HttpResponseRedirect("/users")
 
 
 def handler404(request, exception):

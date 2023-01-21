@@ -141,9 +141,17 @@
           {% if not isHistory %}
           <td>
             <input class="btn btn-primary" type="submit" value="Save" />
-            <button class="deleteIcon btn btn-danger" type="button" onclick="deleteRecord('{{record.id}}')">
-              <i class="bi bi-trash"></i>
-            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-toggle="modal"
+              data-bs-target="#confirmModal"
+              data-toggle="modal"
+              data-target="#confirmModal"
+              onclick="showConfirmModal('record', '{{ record.date|date:'d/m' }} - {{ record.date|time }} - {{ record.action }}', {{ record.id }})"
+            >
+          <i class="bi bi-trash"></i>
+        </button
           </td>
           {% endif %}
         </form>
