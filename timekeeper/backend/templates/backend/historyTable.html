@@ -4,11 +4,11 @@
   <h4 class="text-center mb-2 p-3">Total worked hours: {{ workedHours }}</h4>
 
   <div class="input-group flex-nowrap my-2 justify-content-center">
-    <span class="input-group-text">
-      <a href="?month=false&year={{year}}&number={{number}}">Week</a>
-    </span>
-    <div class="input-group-text">
-      <a href="?month=true&year={{year}}&number={{number}}">Month</a>
+    <div class="input-group-text btn btn-outline-secondary">
+      <a class="text-decoration-none text-muted" href="?month=false&year={{year}}&number={{number}}">Week</a>
+    </div>
+    <div class="input-group-text btn btn-outline-secondary">
+      <a class="text-decoration-none text-muted" href="?month=true&year={{year}}&number={{number}}">Month</a>
     </div>
   </div>
 
@@ -22,7 +22,7 @@
           {% endfor %}
         </select>
       </div>
-  
+
       <div class="bottomSection justify-content-center">
         <ul class="d-flex m-0 p-0" style="list-style: none;">
           <li class="my-1">
@@ -35,7 +35,7 @@
               {% endif %}
             </a>
           </li>
-    
+
           <li class="border-start border-end">
             <select class="py-1 px-1 border-0" onchange="onChangeSelect('{{month}}', '{{year}}', event.srcElement.value)">
               {% for optionNumber in range %}
@@ -43,9 +43,9 @@
               {% endfor %}
             </select>
           </li>
-          
+
           <li class="my-1">
-            <a class="mx-2 py-1 text-decoration-none text-muted" href="?month={{month}}&year={{year}}&number={{number|add:1}}" 
+            <a class="mx-2 py-1 text-decoration-none text-muted" href="?month={{month}}&year={{year}}&number={{number|add:1}}"
             {% if month == 'true' and number|add:1 == 13 or month == 'false' and number|add:1 == 53 %}
             style="pointer-events: none;" {% endif %}>
             {% if month == 'true' and number|add:1 == 13 or month == 'false' and number|add:1 == 53 %}
@@ -68,12 +68,13 @@
       <th scope="col"></th>
       {% endif %}
       <th scope="col">Action</th>
+      <th scope="col">Break Duration</th>
       <th scope="col">Status</th>
       {% if not isHistory %}
       <th></th>
       {% endif %}
     </tr>
-    
+
     {% if records %}
     {% for record in records %}
     <tr>
@@ -91,7 +92,7 @@
             {% if isHistory %}
             {{ record.date|time }}
             {% else %}
-            <input type="time" class="form-control" name="time" min="01:00" max="12:00" value="{{ record.date|date:'h:i' }}" />
+            <input type="time" class="form-control" name="time" min="01:00" max="12:59" value="{{ record.date|date:'h:i' }}" />
             {% endif %}
           </td>
 
@@ -117,9 +118,18 @@
 
           <td>
             {% if isHistory %}
+            {{ record.break_duration }}
+            {% else %}
+              <input type="text" class="form-control" name="breakDuration" value="{{ record.break_duration }}"
+                     style="max-width: 3em" {% if record.action == "Clock-in" %} disabled {% endif %} />
+            {% endif %}
+          </td>
+
+          <td>
+            {% if isHistory %}
               {{ record.status }}
             {% else %}
-            <select name="status" id="status{{record.id}}" class="status">
+            <select name="status" id="status{{record.id}}" class="status form-select">
               <option value="Approved" {% if record.status == "Approved" %} selected {% endif %}>Approved</option>
               <option value="Wating Approval" {% if record.status == "Wating Approval" %} selected {% endif %}>Wating
                 Approval</option>
@@ -130,15 +140,10 @@
           </td>
           {% if not isHistory %}
           <td>
-            <button class="editIcon" type="button" onclick="editInput('record{{record.id}}')">
-              <i class="bi bi-pen"></i>
-            </button>
-            <button class="deleteIcon" type="button" onclick="deleteRecord('{{record.id}}')">
+            <input class="btn btn-primary" type="submit" value="Save" />
+            <button class="deleteIcon btn btn-danger" type="button" onclick="deleteRecord('{{record.id}}')">
               <i class="bi bi-trash"></i>
             </button>
-            <input class="saveIcon" type="submit">
-            <i class="bi bi-floppy"></i>
-            </input>
           </td>
           {% endif %}
         </form>

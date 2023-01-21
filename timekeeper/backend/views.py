@@ -21,14 +21,9 @@ def history(request):
         return redirect("/auths/password")
 
     if request.method == "POST":
-        record = Record()
-        record.user = request.user
-        record.status = "Approved"
-        record.action = request.POST.get("action")
-        record.save()
+        create_record(request)
         current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
         return redirect(f"/history{current_week}")
-
     else:
         try:
             records = get_records(request)
@@ -67,25 +62,11 @@ def include(request):
         return redirect("/auths/password")
 
     if request.method == "POST":
-        record = Record()
-        record.user = request.user
-        record.date = get_date(request)
-        record.action = request.POST.get("action")
-        record.save()
+        create_record(request)
         current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
         return redirect(f"/history{current_week}")
-
     else:
         return render(request, "backend/include.html")
-
-
-def get_date(request):
-    time = request.POST.get("time")
-    time_period = request.POST.get("timePeriod")
-    if time_period == "PM":
-        time = f'{int(time[:2]) + 12}:{time[4:]}'
-    datetime_str = f'{request.POST.get("date")} {time}'
-    return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
 
 
 def user_list(request):
@@ -170,6 +151,22 @@ def user(request, user_id):
     return render(request, "backend/user.html", context)
 
 
+ZERO_HOUR = 0
+TWELVE_HOURS = 12
+TWENTY_FOUR_HOURS = 24
+
+
+def get_date(request):
+    time = request.POST.get("time")
+    time_period = request.POST.get("timePeriod")
+    if time_period == "PM":
+        hours = ZERO_HOUR if int(time[:2]) + TWELVE_HOURS == TWENTY_FOUR_HOURS else int(time[:2]) + TWELVE_HOURS
+        minutes = time[3:]
+        time = f'{hours}:{minutes}'
+    datetime_str = f'{request.POST.get("date")} {time}'
+    return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+
+
 def get_records(request):
     year = request.GET.get("year") if request.GET.get(
         "year") else datetime.now().year
@@ -188,8 +185,24 @@ def get_records(request):
     return Record.objects.filter(query).order_by("date__day", "date__hour")
 
 
+def create_record(request):
+    record = Record()
+    record.user = request.user
+    record.status = "Wating Approval" if request.POST.get("date") else "Approved"
+    record.action = request.POST.get("action")
+    if request.POST.get("date"):
+        record.date = get_date(request)
+    if record.action == "Clock-out":
+        record.break_duration = request.POST.get("breakDuration")
+    record.save()
+
+
+SIXTY_SECONDS = 60
+
+
 def calculate_worked_hours(records):
     worked_hours = timedelta(0)
+    break_duration_sum = 0
     check_in_records = list(
         filter(
             lambda record: record.action == "Clock-in" and record.status == "Approved",
@@ -200,15 +213,18 @@ def calculate_worked_hours(records):
     for record in check_in_records:
         record_index = next(i for i, x in enumerate(
             list(records)) if x.id == record.id)
+
         if record_index + 1 < len(records) and (
-            records[record_index].date.day == records[record_index + 1].date.day
-            and records[record_index + 1].action == "Clock-out"
-            and records[record_index + 1].status == "Approved"
+                records[record_index].date.day == records[record_index + 1].date.day
+                and records[record_index + 1].action == "Clock-out"
+                and records[record_index + 1].status == "Approved"
         ):
             worked_hours += records[record_index +
                                     1].date - records[record_index].date
+            break_duration_sum += records[record_index + 1].break_duration
 
-    worked_seconds = worked_hours.seconds
+    worked_seconds = worked_hours.seconds - (break_duration_sum * SIXTY_SECONDS)
+
     return "{:02}h{:02}".format(worked_seconds // 3600, worked_seconds % 3600 // 60)
 
 

@@ -1,10 +1,21 @@
 {% extends 'backend/base.html' %} {% load static %} {% block content %}
-<div class="clockContainer w-100 p-3 mb-3 text-center">
+<div class="clockContainer w-100 mb-3 text-center">
   <h2 class="clock fs-1" id="clock">00:00:00 AM</h2>
   <form action="" method="post">
     {% csrf_token %}
-    <input type="submit" name="action" value="Clock-in" />
-    <input type="submit" name="action" value="Clock-out" />
+    <div class="input-group mb-3" style="max-width: 15em; margin: 0 auto;">
+      <span class="input-group-text">Break (in minutes)</span>
+      <input type="text" class="form-control" name="breakDuration" value="0" />
+    </div>
+
+    <div class="input-group flex-nowrap my-2 justify-content-center">
+      <div class="input-group-text">
+        <input type="submit" name="action" value="Clock-in" class="btn" />
+      </div>
+      <div class="input-group-text">
+        <input type="submit" name="action" value="Clock-out" class="btn" />
+      </div>
+    </div>
   </form>
 </div>
 

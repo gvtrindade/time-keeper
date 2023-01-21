@@ -1,28 +1,46 @@
-{% extends 'backend/base.html' %}
-
-{% block content%}
+{% extends 'backend/base.html' %} {% load static %} {% block content%}
 <div class="my-2 text-center">
-  <h2>Include Clock-in</h2>
+  <h2 class="mb-3 fs-1">Include record</h2>
   <form action="" method="post">
     {% csrf_token %}
     <div class="input-group flex-nowrap my-2">
-      <label class="input-group-text" for="time">Time</label>
-      <input type="time" class="form-control" name="time" />
-    </div>
-    <div class="input-group flex-nowrap my-2">
-      <input type="date" class="form-control" name="date" />
       <label class="input-group-text" for="date">Date</label>
+      <input type="date" class="form-control" name="date" />
     </div>
-    <div class="input-group mb-3">
-      <label class="input-group-text" for="action">Action</label>
-      <select name="action" id="action{{record.id}}" class="action form-select">
-        <option value="Clock-in" {% if record.action == "Clock-in" %}selected{% endif %}>
-          Clock-in
-        </option>
-        
+
+    <div class="input-group flex-nowrap my-2">
+      <input type="time" class="form-control" name="time" min="01:00" max="12:59"/>
+      <label class="input-group-text" for="time">Time</label>
+    </div>
+
+    <div class="input-group flex-nowrap my-2">
+      <select name="timePeriod" class="action form-select">
+        <option value="AM" selected>AM</option>
+        <option value="PM">PM</option>
+      </select>
+      <label class="input-group-text" for="timePeriod">Time Period</label>
+    </div>
+
+    <div class="input-group flex-nowrap my-2">
+      <label class="input-group-text" for="actionSelect">Action</label>
+      <select name="action" id="actionSelect" class="action form-select" onblur="hideBreakDuration()">
+        <option value="Clock-in" selected>Clock-in</option>
+        <option value="Clock-out">Clock-out</option>
       </select>
     </div>
-    <input type="submit" value="Submit" required />
+
+    <div id="breakDuration" class="input-group flex-nowrap my-2" hidden>
+      <input type="number" class="form-control" name="breakDuration"/>
+      <label class="input-group-text">Break (in minutes)</label>
+    </div>
+
+    <input
+      type="submit"
+      class="btn btn-primary"
+      value="Include Record"
+      required
+    />
   </form>
 </div>
+<script src="{% static 'js/include.js' %}"></script>
 {% endblock %}
