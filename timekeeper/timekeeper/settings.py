@@ -1,17 +1,18 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-
-load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = str(os.getenv("SECRET_KEY"))
+SECRET_KEY = os.environ.get("SECRET_KEY", "changeme")
 
-DEBUG = True
+DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = []
+ALLOWED_HOSTS_ENV = os.environ.get("ALLOWED_HOSTS")
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(","))
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -87,13 +88,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/static"
+MEDIA_URL = "/static/media"
+
+STATIC_ROOT = "/vol/web/static"
+MEDIA_ROOT = "/vol/web/media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-EMAIL_HOST = str(os.getenv("EMAIL_HOST"))
-EMAIL_PORT = str(os.getenv("EMAIL_PORT"))
-EMAIL_USE_SSL = str(os.getenv("EMAIL_USE_SSL"))
-EMAIL_HOST_USER = str(os.getenv("EMAIL_HOST_USER"))
-EMAIL_HOST_PASSWORD = str(os.getenv("EMAIL_HOST_PASSWORD"))
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
