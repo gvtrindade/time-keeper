@@ -1,5 +1,0 @@
-django
-autopep8
-pylint 
-pylint-django
-python-dotenv
