@@ -10,3 +10,4 @@ class Record(models.Model):
     action = models.CharField(max_length=20, default='')
     status = models.CharField(max_length=20, default='Wating Approval')
     break_duration = models.IntegerField(default=0)
+    remarks = models.CharField(max_length=255, default='')

@@ -7,6 +7,10 @@ from .models import Record
 from auths.models import CustomUser
 from datetime import datetime, timedelta
 
+SIXTY_SECONDS = 60
+ZERO_HOUR = 0
+TWELVE_HOURS = 12
+TWENTY_FOUR_HOURS = 24
 
 def index(request):
     return redirect("/auths")
@@ -155,9 +159,6 @@ def user(request, user_id):
     return render(request, "backend/user.html", context)
 
 
-ZERO_HOUR = 0
-TWELVE_HOURS = 12
-TWENTY_FOUR_HOURS = 24
 
 
 def get_date(request):
@@ -198,12 +199,11 @@ def create_record(request):
     record.action = request.POST.get("action")
     if request.POST.get("date"):
         record.date = get_date(request)
+    if request.POST.get("remarks"):
+        record.remarks = request.POST.get("remarks")
     if record.action == "Clock-out":
         record.break_duration = request.POST.get("breakDuration")
     record.save()
-
-
-SIXTY_SECONDS = 60
 
 
 def calculate_worked_hours(records):

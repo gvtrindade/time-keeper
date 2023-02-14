@@ -9,7 +9,13 @@
     </div>
 
     <div class="input-group flex-nowrap my-2">
-      <input type="time" class="form-control" name="time" min="01:00" max="12:59"/>
+      <input
+        type="time"
+        class="form-control"
+        name="time"
+        min="01:00"
+        max="12:59"
+      />
       <label class="input-group-text" for="time">Time</label>
     </div>
 
@@ -23,15 +29,25 @@
 
     <div class="input-group flex-nowrap my-2">
       <label class="input-group-text" for="actionSelect">Action</label>
-      <select name="action" id="actionSelect" class="action form-select" onblur="hideBreakDuration()">
+      <select
+        name="action"
+        id="actionSelect"
+        class="action form-select"
+        onblur="hideBreakDuration()"
+      >
         <option value="Clock-in" selected>Clock-in</option>
         <option value="Clock-out">Clock-out</option>
       </select>
     </div>
 
     <div id="breakDuration" class="input-group flex-nowrap my-2" hidden>
-      <input type="number" class="form-control" name="breakDuration"/>
+      <input type="number" class="form-control" name="breakDuration" />
       <label class="input-group-text">Break (in minutes)</label>
+    </div>
+
+    <div id="remark" class="input-group flex-nowrap my-2">
+      <textarea class="form-control" name="remarks"></textarea>
+      <label class="input-group-text">Remarks</label>
     </div>
 
     <input
