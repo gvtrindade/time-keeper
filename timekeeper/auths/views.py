@@ -3,13 +3,13 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 
-from .forms import PasswordChangingForm
+from .forms import PasswordChangingForm, PasswordResettingForm, PasswordResettingConfirmForm
 from .models import CustomUser
 
 
@@ -118,3 +118,25 @@ class PasswordsChangeView(PasswordChangeView):
     def form_valid(self, form):
         form.user.is_password_reset = True
         return super().form_valid(form)
+
+def reset_password_success(request):
+    return render(request, "auths/reset-password-success.html")
+
+def reset_password_complete(request):
+    return render(request, "auths/reset-password-success.html")
+
+class PasswordsResetView(PasswordResetView):
+    form_class = PasswordResettingForm
+    success_url = "/auths/reset-password-success"
+
+class PasswordsResetConfirmView(PasswordResetView):
+    form_class = PasswordResettingConfirmForm
+    success_url = "/auths/reset-password-confirm"
+
+    def get_form_kwargs(self):
+        # grab the current set of form #kwargs
+        kwargs = super(PasswordsResetConfirmView, self).get_form_kwargs()
+        print(kwargs)
+        # Update the kwargs with the user_id
+        kwargs['user'] = self.request.user 
+        return kwargs
