@@ -119,15 +119,19 @@ class PasswordsChangeView(PasswordChangeView):
         form.user.is_password_reset = True
         return super().form_valid(form)
 
+
 def reset_password_success(request):
     return render(request, "auths/reset-password-success.html")
 
+
 def reset_password_complete(request):
-    return render(request, "auths/reset-password-success.html")
+    return render(request, "auths/reset-password-complete.html")
+
 
 class PasswordsResetView(PasswordResetView):
     form_class = PasswordResettingForm
     success_url = "/auths/reset-password-success"
+
 
 class PasswordsResetConfirmView(PasswordResetView):
     form_class = PasswordResettingConfirmForm
@@ -138,5 +142,5 @@ class PasswordsResetConfirmView(PasswordResetView):
         kwargs = super(PasswordsResetConfirmView, self).get_form_kwargs()
         print(kwargs)
         # Update the kwargs with the user_id
-        kwargs['user'] = self.request.user 
+        kwargs['user'] = self.request.user
         return kwargs

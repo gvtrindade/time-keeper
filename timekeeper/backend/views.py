@@ -26,19 +26,33 @@ def history(request):
         return redirect("/auths/password")
 
     if request.method == "POST":
-        create_record(request)
+        user = request.user
+        status = "Wating Approval" if request.POST.get("date") else "Approved"
+        action = request.POST.get("action")
+        break_duration = request.POST.get("breakDuration")
+
+        record = Record()
+        record.create_record(user, status, action,
+                             break_duration=break_duration)
+
         current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
         return redirect(f"/history{current_week}")
     else:
+        user = request.user
+        year = int(request.GET.get('year'))
+        number = int(request.GET.get('number'))
+        is_month = request.GET.get('month') == 'true'
+
         try:
-            records = get_records(request)
+            record = Record()
+            records = record.get_records(user, year, number, is_month)
             earliest_record = (
                 Record.objects.filter(user=request.user).earliest(
                     "date__year").date.year
             )
             context = {
                 "records": records,
-                "workedHours": calculate_worked_hours(records),
+                "workedHours": record.calculate_worked_hours(records),
                 "years": range(earliest_record, datetime.now().year + 1),
             }
         except:
@@ -50,10 +64,10 @@ def history(request):
         context = {
             **context,
             "isHistory": True,
-            "year": request.GET.get("year"),
+            "year": year,
             "month": request.GET.get("month"),
-            "number": request.GET.get("number"),
-            "range": range(1, 13) if request.GET.get("month") == "true" else range(1, 53),
+            "number": number,
+            "range": range(1, 13) if is_month else range(1, 53),
         }
         return render(request, "backend/history.html", context)
 
@@ -68,7 +82,19 @@ def include(request):
         return redirect("/auths/password")
 
     if request.method == "POST":
-        create_record(request)
+        user = request.user
+        status = "Wating Approval" if request.POST.get("date") else "Approved"
+        action = request.POST.get("action")
+        break_duration = request.POST.get("breakDuration")
+        date = request.POST.get("date")
+        time = request.POST.get("time")
+        time_period = request.POST.get("timePeriod")
+        remarks = request.POST.get("remarks")
+
+        record = Record()
+        record.create_record(user, status, action, date,
+                             time, time_period, break_duration, remarks)
+
         current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
         return redirect(f"/history{current_week}")
     else:
@@ -109,6 +135,8 @@ def user(request, user_id):
         return redirect(f"/history{current_week}")
 
     listed_user = CustomUser.objects.get(id=user_id)
+    record = Record()
+
     if request.method == "POST":
         if request.POST.get("username"):
             listed_user.username = request.POST.get("username")
@@ -121,14 +149,20 @@ def user(request, user_id):
                 listed_user.is_staff = False
             listed_user.save()
         else:
-            record = Record.objects.get(id=request.POST.get("id"))
-            record.date = get_date(request)
-            record.action = request.POST.get("action")
-            record.status = request.POST.get("status")
-            record.save()
+            edited_record = Record.objects.get(id=request.POST.get("id"))
+            date = request.POST.get("date")
+            time = request.POST.get("time")
+            time_period = request.POST.get("timePeriod")
+            edited_record.date = record.get_date(date, time, time_period)
+            edited_record.action = request.POST.get("action")
+            edited_record.status = request.POST.get("status")
+            edited_record.save()
 
     try:
-        records = get_records(request)
+        year = int(request.GET.get('year'))
+        number = int(request.GET.get('number'))
+        is_month = request.GET.get('month') == 'true'
+        records = record.get_records(listed_user, year, number, is_month)
         earliest_record = (
             Record.objects.filter(user=listed_user).earliest(
                 "date__year").date.year
