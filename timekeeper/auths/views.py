@@ -28,7 +28,7 @@ def login_user(request):
             if not user.is_password_reset:
                 messages.success(
                     request, "You must reset your password before accessing the application")
-                return redirect("/auths/password")
+                return redirect("/auths/change-password")
             return redirect(f"/history{current_week}")
         else:
             messages.success(
@@ -55,7 +55,7 @@ def register_user(request):
     elif not request.user.is_password_reset:
         messages.success(
             request, "You must reset your password before accessing the application")
-        return redirect("/auths/password")
+        return redirect("/auths/change-password")
 
     if not request.user.is_staff:
         messages.success(request, "You can't access this page")
@@ -97,13 +97,18 @@ def delete_user(request, user_id):
 def send_register_email(user, password):
     send_mail(
         "Welcome to The Pleasaunce team!",
-        f"We are very happy to have out volunteer with us, {user.first_name} {user.last_name}! \n"
+        f"Welcome to The Pleasaunce team! \n"
+        + f"\n"
+        + f"We are very happy to have out volunteer with us, {user.first_name} {user.last_name}! \n"
         + f"\n"
         + f"Here are your credentials: \n"
         + f"Username: {user.username}\n"
         + f"Password: {password}\n"
         + f"\n"
-        + f"You will have to create a new password upon your first login!",
+        + f"You will have to register a new password upon your first login!\n"
+        + f"\n"
+        + f"You can start registering your activities at: \n"
+        + f"https://timekeeper.pythonanywhere.com/",
         str(os.getenv("EMAIL_HOST_USER")),
         recipient_list=[user.email],
         fail_silently=False,

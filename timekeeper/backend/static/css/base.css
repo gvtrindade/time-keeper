@@ -1,0 +1,22 @@
+* {
+  font-family: 'Open Sans', sans-serif;
+  letter-spacing: 0;
+  font-size: 16px;
+}
+
+.nav-link {
+  color: #282828 !important;
+  font-weight: 600 !important;
+}
+
+.nav-link.active {
+  color: #00729a !important;
+}
+
+.nav-link.active:hover {
+  color: #2EA3F2 !important;
+}
+
+.nav-link:hover {
+  color: rgba(0, 0, 0, 0.6) !important;
+}

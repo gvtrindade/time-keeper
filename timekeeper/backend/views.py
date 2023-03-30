@@ -12,6 +12,7 @@ ZERO_HOUR = 0
 TWELVE_HOURS = 12
 TWENTY_FOUR_HOURS = 24
 
+
 def index(request):
     return redirect("/auths")
 
@@ -23,7 +24,7 @@ def history(request):
     elif not request.user.is_password_reset:
         messages.success(
             request, "You must reset your password before accessing the application")
-        return redirect("/auths/password")
+        return redirect("/auths/change-password")
 
     if request.method == "POST":
         user = request.user
@@ -79,7 +80,7 @@ def include(request):
     elif not request.user.is_password_reset:
         messages.success(
             request, "You must reset your password before accessing the application")
-        return redirect("/auths/password")
+        return redirect("/auths/change-password")
 
     if request.method == "POST":
         user = request.user
@@ -109,7 +110,7 @@ def user_list(request):
     elif not request.user.is_password_reset:
         messages.success(
             request, "You must reset your password before accessing the application")
-        return redirect("/auths/password")
+        return redirect("/auths/change-password")
 
     if not request.user.is_staff:
         messages.success(request, "You can't access this page")
@@ -128,7 +129,7 @@ def user(request, user_id):
     elif not request.user.is_password_reset:
         messages.success(
             request, "You must reset your password before accessing the application")
-        return redirect("/auths/password")
+        return redirect("/auths/change-password")
 
     if not request.user.is_staff:
         messages.success(request, "You can't access this page")
@@ -191,8 +192,6 @@ def user(request, user_id):
     }
 
     return render(request, "backend/user.html", context)
-
-
 
 
 def get_date(request):
