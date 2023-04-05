@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.db.models import Q
 from django.http import HttpResponseRedirect
 
 from .models import Record
 from auths.models import CustomUser
-from datetime import datetime, timedelta
+from datetime import datetime
 
 CURRENT_WEEK = f"month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
 

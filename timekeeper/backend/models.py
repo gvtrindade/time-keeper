@@ -42,19 +42,14 @@ class Record(models.Model):
             record.break_duration = break_duration
 
         if date:
-            record.date = self.get_date(date, time, time_period)
+            record.date = self.get_date(date, time)
 
         if remarks:
             record.remarks = remarks
 
         record.save()
 
-    def get_date(self, date, time, time_period):
-        if time_period == "PM":
-            hours = self.ZERO_HOUR if int(
-                time[:2]) + self.TWELVE_HOURS == self.TWENTY_FOUR_HOURS else int(time[:2]) + self.TWELVE_HOURS
-            minutes = time[3:]
-            time = f'{hours}:{minutes}'
+    def get_date(self, date, time):
         datetime_str = f'{date} {time}'
         return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
 
