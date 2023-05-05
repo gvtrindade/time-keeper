@@ -33,7 +33,7 @@ class Record(models.Model):
 
         return Record.objects.filter(query).order_by("date__day", "date__hour")
 
-    def create_record(self, user, status, action, date=None, time=None, time_period=None, break_duration=0, remarks=None):
+    def create_record(self, user, status, action, date=None, time=None, break_duration=0, remarks=None):
         record = Record()
         record.user = user
         record.status = status
