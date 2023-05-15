@@ -3,59 +3,48 @@
 <div class="historyContainer pb-3">
   <h4 class="text-center mb-2 p-3">Total worked hours: {{ workedHours }}</h4>
 
-  <div class="input-group flex-nowrap my-2 justify-content-center">
-    <div class="input-group-text btn btn-outline-secondary">
-      <a class="text-decoration-none text-muted" href="?month=false&year={{year}}&number={{number}}">Week</a>
-    </div>
-    <div class="input-group-text btn btn-outline-secondary">
-      <a class="text-decoration-none text-muted" href="?month=true&year={{year}}&number={{number}}">Month</a>
-    </div>
-  </div>
-
   <div class="nav justify-content-center">
 
     <nav aria-label="Week/Month navigation" class="border rounded mb-4" style="width: fit-content;">
       <div class="topSection border-bottom justify-content-center">
-        <select class="border-0 py-1" style="width: 100%; text-align: center" onchange="onChangeSelect('{{month}}', event.srcElement.value, '{{number}}')">
-          {% for optionYear in years %}
-          <option value="{{optionYear}}" label='{{optionYear}}' {% if optionYear == year|add:0 %} selected {% endif %}>
+        <select id="selectYear" class="border-0 py-1" style="width: 100%; text-align: center">
+          {% for year in years %}
+          <option value="{{year}}" label='{{year}}' 
+            {% if year == selectedYear|add:0 %} selected {% endif %}
+          >
           {% endfor %}
         </select>
-      </div>
+        <hr style="margin: 0">
 
-      <div class="bottomSection justify-content-center">
-        <ul class="d-flex m-0 p-0" style="list-style: none;">
-          <li class="my-1">
-            <a class="mx-2 py-1 text-decoration-none text-muted" href="?month={{month}}&year={{year}}&number={{number|add:'-1'}}" {% if number|add:'-1' == 0 %}
-            style="pointer-events: none;" {% endif %}>
-              {% if number|add:'-1' == 0 %}
-              <i class="bi bi-caret-left"></i>
-              {% else %}
-              <i class="bi bi-caret-left-fill"></i>
-              {% endif %}
-            </a>
-          </li>
+        <select id="selectMonth" class="border-0 py-1" style="width: 100%; text-align: center">
+          {% for key, value in months.items %}
+          <option value="{{key}}" label="{{value}}"  
+            {% if key == selectedMonth|add:0 %} selected {% endif %}
+          ></option>
+          {% endfor %}
+        </select>
+        <hr style="margin: 0">
 
-          <li class="border-start border-end">
-            <select style="height: 100%;" class="py-1 px-1 border-0" onchange="onChangeSelect('{{month}}', '{{year}}', event.srcElement.value)">
-              {% for optionNumber in range %}
-              <option value="{{optionNumber}}" {% if optionNumber == number|add:0 %} selected {% endif %}>{{optionNumber}}</option>
-              {% endfor %}
-            </select>
-          </li>
+        <button onclick="handleFilter('{{selectedWeek}}')" 
+          class="border-0 py-1" style="width: 100%; text-align: center"
+        >
+          Filter
+        </button>
+        <hr style="margin: 0">
 
-          <li class="my-1">
-            <a class="mx-2 py-1 text-decoration-none text-muted" href="?month={{month}}&year={{year}}&number={{number|add:1}}"
-            {% if month == 'true' and number|add:1 == 13 or month == 'false' and number|add:1 == 53 %}
-            style="pointer-events: none;" {% endif %}>
-            {% if month == 'true' and number|add:1 == 13 or month == 'false' and number|add:1 == 53 %}
-            <i class="bi bi-caret-right"></i>
-            {% else %}
-            <i class="bi bi-caret-right-fill"></i>
-            {% endif %}
-            </a>
-          </li>
-        </ul>
+        <select id="selectWeek" 
+          onchange="handleFilter(event.srcElement.value)" 
+          class="border-0 py-1" style="padding: 0 0.8em; width: 100%;"
+        >
+          <option value="-1" label="Full Month" 
+            {% if -1 == selectedWeek|add:0 %} selected {% endif %}
+          ></option>
+          {% for key, value in options.items %}
+          <option value="{{key}}" label="{{value}}"  
+            {% if key == selectedWeek|add:0 %} selected {% endif %}
+          ></option>
+          {% endfor %}
+        </select>
       </div>
     </nav>
   </div>
@@ -121,9 +110,16 @@
               {{ record.status }}
             {% else %}
             <select name="status" id="status{{record.id}}" class="status form-select">
-              <option value="Approved" {% if record.status == "Approved" %} selected {% endif %}>Approved</option>
-              <option value="Wating Approval" {% if record.status == "Wating Approval" %} selected {% endif %}>Wating
-                Approval</option>
+              <option value="Approved" 
+                {% if record.status == "Approved" %} selected {% endif %}
+              >
+                Approved
+              </option>
+
+              <option value="Wating Approval" 
+                {% if record.status == "Wating Approval" %} selected {% endif %}
+              >
+                Wating Approval
               </option>
             </select>
             <input type="text" name="id" value="{{record.id}}" hidden>

@@ -12,11 +12,11 @@ from django.shortcuts import render, redirect
 from .forms import PasswordChangingForm, PasswordResettingForm, PasswordResettingConfirmForm
 from .models import CustomUser
 
+CURRENT_WEEK = f"?year={datetime.now().year}&month={datetime.now().month}&week={datetime.now().strftime('%V')}"
 
 def login_user(request):
-    current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
     if request.user.is_authenticated:
-        return redirect(f"/history{current_week}")
+        return redirect(f"/history{CURRENT_WEEK}")
 
     if request.method == "POST":
         username = request.POST["username"]
@@ -29,7 +29,7 @@ def login_user(request):
                 messages.success(
                     request, "You must reset your password before accessing the application")
                 return redirect("/auths/change-password")
-            return redirect(f"/history{current_week}")
+            return redirect(f"/history{CURRENT_WEEK}")
         else:
             messages.success(
                 request, "There was an error logging in, try again")
@@ -47,7 +47,6 @@ def logout_user(request):
 
 
 def register_user(request):
-    current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
 
     if not request.user.is_authenticated:
         messages.success(request, "You must login to access this page")
@@ -59,7 +58,7 @@ def register_user(request):
 
     if not request.user.is_staff:
         messages.success(request, "You can't access this page")
-        return redirect(f"/history{current_week}")
+        return redirect(f"/history{CURRENT_WEEK}")
 
     if request.method == "POST":
         if request.POST.get("role"):
@@ -117,8 +116,7 @@ def send_register_email(user, password):
 
 class PasswordsChangeView(PasswordChangeView):
     form_class = PasswordChangingForm
-    current_week = f"?month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
-    success_url = f"/history{current_week}"
+    success_url = f"/history{CURRENT_WEEK}"
 
     def form_valid(self, form):
         form.user.is_password_reset = True

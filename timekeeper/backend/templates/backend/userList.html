@@ -17,7 +17,7 @@
       <td>
         <a
           class="editIcon btn btn-primary"
-          href="{% url 'backend:user' user.id %}?month=false&year={% now 'Y' %}&number={% now 'W' %}"
+          href="{% url 'backend:user' user.id %}?year={% now 'Y' %}&month={% now 'm' %}&week={% now 'W' %}"
         >
           <i class="bi bi-pen"></i>
         </a>

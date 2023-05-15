@@ -27,7 +27,7 @@
       <div class="container-fluid">
         <a
           class="navbar-brand"
-          href="{% url 'backend:history' %}?month=false&year={% now 'Y' %}&number={% now 'W' %}"
+          href="{% url 'backend:history' %}?year={% now 'Y' %}&month={% now 'm' %}&week={% now 'W' %}"
           style="
             font-family: Georgia;
             font-size: 1.5rem;
@@ -64,7 +64,7 @@
               <a
                 class="nav-link {% if 'history' in request.path %}active{% endif %}"
                 aria-current="page"
-                href="{% url 'backend:history' %}?month=false&year={% now 'Y' %}&number={% now 'W' %}"
+                href="{% url 'backend:history' %}?year={% now 'Y' %}&month={% now 'm' %}&week={% now 'W' %}"
                 >History</a
               >
             </li>
