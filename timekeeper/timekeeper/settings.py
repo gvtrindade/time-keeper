@@ -93,7 +93,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT = "/home/gabrielsvtrindade/timekeeper/backend/static/"
+STATIC_ROOT = os.environ.get("STATIC_ROOT")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
