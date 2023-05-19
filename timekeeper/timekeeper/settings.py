@@ -97,8 +97,8 @@ STATIC_ROOT = "/home/gabrielsvtrindade/timekeeper/backend/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "gabrielsvtrindade@gmail.com"
-EMAIL_HOST_PASSWORD = 'cjjzlmynjzxnzenf'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT") or 0)
+EMAIL_USE_TLS = bool(os.environ.get("EMAIL_USE_TLS") or False)
