@@ -90,20 +90,11 @@
 
           <td>
             {% if isHistory %}
-            {{ record.date|time }}
+            {{ record.date|date:'H:i' }}
             {% else %}
-            <input type="time" class="form-control" name="time" min="01:00" max="12:59" value="{{ record.date|date:'h:i' }}" />
+            <input type="time" class="form-control" name="time" value="{{ record.date|date:'H:i' }}" />
             {% endif %}
           </td>
-
-          {% if not isHistory %}
-          <td>
-            <select name="timePeriod" class="form-select">
-              <option value="AM" {% if record.date|date:'A' == "AM" %} selected {% endif %}>AM</option>
-              <option value="PM" {% if record.date|date:'A' == "PM" %} selected {% endif %}>PM</option>
-            </select>
-          </td>
-          {% endif %}
 
           <td>
             {% if isHistory %}
@@ -138,6 +129,7 @@
             <input type="text" name="id" value="{{record.id}}" hidden>
             {% endif %}
           </td>
+          
           {% if not isHistory %}
           <td>
             <input class="btn btn-primary" type="submit" value="Save" />
@@ -148,7 +140,7 @@
               data-bs-target="#confirmModal"
               data-toggle="modal"
               data-target="#confirmModal"
-              onclick="showConfirmModal('record', '{{ record.date|date:'d/m' }} - {{ record.date|time }} - {{ record.action }}', {{ record.id }})"
+              onclick="showDeleteConfirmModal('record', '{{ record.date|date:'d/m' }} - {{ record.date|date:'H:i' }} - {{ record.action }}', {{ record.id }})"
             >
               <i class="bi bi-trash"></i>
             </button>

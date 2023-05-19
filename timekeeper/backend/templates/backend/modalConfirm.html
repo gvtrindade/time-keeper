@@ -11,7 +11,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="confirmModal">Delete</h5>
+        <h5 class="modal-title" id="confirmModalTitle"></h5>
         <button
           type="button"
           class="close"
@@ -24,26 +24,61 @@
       </div>
 
       <div class="modal-body">
-        <div id="modal-content">
-          <p>
-            Are you sure you want to delete the
-            <span id="deletedDataType"></span>:
-          </p>
-          <p class="text-center"><strong id="deletedDataTitle"></strong></p>
+        <div id="delete-modal-content" hidden>
+          <div id="modal-content">
+            <p>
+              Are you sure you want to delete the
+              <span id="deletedDataType"></span>
+              :
+            </p>
+            <p class="text-center"><strong id="deletedDataTitle"></strong></p>
+          </div>
+
+          <div class="modal-buttons" style="float: right">
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="handleDelete()"
+            >
+              Delete
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
         </div>
 
-        <div class="modal-buttons" style="float: right">
-          <button type="button" class="btn btn-danger" onclick="handleDelete()">
-            Delete
-          </button>
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-dismiss="modal"
-            data-bs-dismiss="modal"
-          >
-            Close
-          </button>
+        <div id="register-modal-content" hidden>
+          <div id="modal-content">
+            <div
+              class="input-group mb-3"
+              style="max-width: 15em; margin: 0 auto"
+            >
+              <span class="input-group-text">Break (in minutes)</span>
+              <input
+                type="number"
+                id="breakDuration"
+                min="0"
+                class="form-control"
+                value="0"
+              />
+            </div>
+          </div>
+
+          <div class="modal-buttons" style="float: right">
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="handleRegister()"
+            >
+              Register
+            </button>
+          </div>
         </div>
       </div>
     </div>
