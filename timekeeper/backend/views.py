@@ -30,6 +30,7 @@ def history(request):
         record = Record()
         record.create_record(user, "Approved", action, break_duration=break_duration)
 
+
         return redirect(f"/history?{CURRENT_WEEK}")
     else:
         user = request.user
@@ -92,7 +93,6 @@ def include(request):
         if (clockout_time):
             record.create_record(
                 user, "Wating Approval", 'Clock-out', date, clockout_time, break_duration, remarks)
-
         return redirect(f"/history?{CURRENT_WEEK}")
     else:
         return render(request, "backend/include.html")

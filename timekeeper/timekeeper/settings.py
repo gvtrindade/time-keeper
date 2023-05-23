@@ -1,20 +1,16 @@
 import os
 from pathlib import Path
 
-import environ
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-root = environ.Path()
-env = environ.Env()
-env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 
-SECRET_KEY = env.str("SECRET_KEY", default="changeme")
 
-DEBUG = env.bool("DEBUG", default=False)
+SECRET_KEY = os.environ.get("SECRET_KEY", "changeme")
+
+DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
 ALLOWED_HOSTS = []
-ALLOWED_HOSTS_ENV = env.str("ALLOWED_HOSTS", default="")
-if len(ALLOWED_HOSTS_ENV) > 0:
+ALLOWED_HOSTS_ENV = os.environ.get("ALLOWED_HOSTS")
+if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(","))
 
 
@@ -61,8 +57,11 @@ WSGI_APPLICATION = "timekeeper.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),
     }
 }
 
@@ -92,17 +91,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = "/static/static/"
-MEDIA_URL = "/static/media/"
+STATIC_URL = "/static/"
 
-STATIC_ROOT = "/vol/web/static/"
-MEDIA_ROOT = "/vol/web/media/"
+STATIC_ROOT = os.environ.get("STATIC_ROOT")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-EMAIL_HOST = env.str("EMAIL_HOST", default="")
-EMAIL_PORT = env.int("EMAIL_PORT", default="")
-EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
-EMAIL_HOST_USER = env.str("EMAIL_HOST_USER", default="")
-EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", default="")
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT") or 0)
+EMAIL_USE_TLS = bool(os.environ.get("EMAIL_USE_TLS") or False)
