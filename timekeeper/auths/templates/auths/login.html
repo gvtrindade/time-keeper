@@ -1,4 +1,4 @@
-{% extends 'backend/base.html'%} {% block content %}
+{% extends 'backend/base.html'%} {% block content %} {% load static %}
 <div class="p-3 text-center">
   <form action="" method="post">
     {% csrf_token %}
@@ -17,6 +17,9 @@
         placeholder="Password"
         name="password"
       />
+      <button class="input-group-text password-button" onclick="showPassword(event)">
+         <i class="bi bi-eye-slash"></i>
+      </button>
     </div>
 
     <div class="my-4">
@@ -25,5 +28,7 @@
     <input type="submit" class="btn btn-primary" value="Login" />
   </form>
 </div>
+
+<script src="{% static 'js/showPassword.js' %}"></script>
 
 {% endblock %}
