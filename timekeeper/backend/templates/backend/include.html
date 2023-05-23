@@ -7,34 +7,32 @@
       <label class="input-group-text" for="date">Date</label>
       <input type="date" class="form-control" name="date" />
     </div>
-
+    
     <div class="input-group flex-nowrap my-2">
-      <input type="time" class="form-control" name="time" />
-      <label class="input-group-text" for="time">Time</label>
+      <input type="time" class="form-control" name="clockInTime" />
+      <label class="input-group-text" for="clockInTime">Clock-in Time*</label>
     </div>
 
     <div class="input-group flex-nowrap my-2">
-      <label class="input-group-text" for="actionSelect">Action</label>
-      <select
-        name="action"
-        id="actionSelect"
-        class="action form-select"
-        onblur="hideBreakDuration()"
-      >
-        <option value="Clock-in" selected>Clock-in</option>
-        <option value="Clock-out">Clock-out</option>
-      </select>
+      <label class="input-group-text" for="clockOutTime">Clock-out Time*</label>
+      <input type="time" class="form-control" name="clockOutTime" />
     </div>
 
-    <div id="breakDuration" class="input-group flex-nowrap my-2" hidden>
+    <div id="breakDuration" class="input-group flex-nowrap my-2">
       <input type="number" min="0" class="form-control" name="breakDuration" />
-      <label class="input-group-text">Break (in minutes)</label>
+      <label class="input-group-text">Break (in minutes)**</label>
     </div>
 
     <div id="remark" class="input-group flex-nowrap my-2">
       <textarea class="form-control" name="remarks"></textarea>
       <label class="input-group-text">Remarks</label>
     </div>
+
+    <p>
+      *It is not necessary to fill both times, just the ones you did not register
+      <br>
+      **Break time will only be registered when clock-out time is filled
+    </p>
 
     <input
       type="submit"

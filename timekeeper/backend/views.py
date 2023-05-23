@@ -8,6 +8,7 @@ from datetime import datetime
 
 CURRENT_WEEK = f"month=false&year={datetime.now().year}&number={datetime.now().strftime('%V')}"
 
+
 def index(request):
     return redirect("/auths")
 
@@ -23,12 +24,12 @@ def history(request):
 
     if request.method == "POST":
         user = request.user
-        status = "Wating Approval" if request.POST.get("date") else "Approved"
         action = request.POST.get("action")
         break_duration = request.POST.get("breakDuration")
 
         record = Record()
-        record.create_record(user, status, action, break_duration=break_duration)
+        record.create_record(user, "Approved", action, break_duration=break_duration)
+
 
         return redirect(f"/history?{CURRENT_WEEK}")
     else:
@@ -77,18 +78,21 @@ def include(request):
 
     if request.method == "POST":
         user = request.user
-        status = "Wating Approval" if request.POST.get("date") else "Approved"
-        action = request.POST.get("action")
-        break_duration = request.POST.get("breakDuration")
         date = request.POST.get("date")
-        time = request.POST.get("time")
-        time_period = request.POST.get("timePeriod")
+        clockin_time = request.POST.get("clockInTime")
+        clockout_time = request.POST.get("clockOutTime")
+        break_duration = request.POST.get("breakDuration") or 0
         remarks = request.POST.get("remarks")
 
         record = Record()
-        record.create_record(user, status, action, date,
-                             time, time_period, break_duration, remarks)
 
+        if (clockin_time):
+            record.create_record(
+                user, "Wating Approval", 'Clock-in', date, clockin_time, break_duration, remarks)
+
+        if (clockout_time):
+            record.create_record(
+                user, "Wating Approval", 'Clock-out', date, clockout_time, break_duration, remarks)
         return redirect(f"/history?{CURRENT_WEEK}")
     else:
         return render(request, "backend/include.html")
@@ -144,7 +148,7 @@ def user(request, user_id):
             date = request.POST.get("date")
             time = request.POST.get("time")
             time_period = request.POST.get("timePeriod")
-            edited_record.date = record.get_date(date, time, time_period)
+            edited_record.date = record.get_date(date, time)
             edited_record.action = request.POST.get("action")
             edited_record.status = request.POST.get("status")
             edited_record.save()
