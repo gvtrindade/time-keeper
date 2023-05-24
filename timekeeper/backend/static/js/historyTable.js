@@ -1,7 +1,17 @@
 csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value
+selectYear = document.getElementById('selectYear')
+selectMont = document.getElementById('selectMonth')
+selectWeek = document.getElementById('selectWeek')
 
-function onChangeSelect(isMonth, year, number) {
-  window.location.href = `${window.location.pathname}?month=${isMonth}&year=${year}&number=${number}`;
+function onChangeSelect(year, month, week) {
+  month = selectMont.value
+  window.location.href = `${window.location.pathname}?year=${year}&month=${month}&week=${week}`;
+}
+
+function handleFilter(week) {
+  year = selectYear.value
+  month = selectMont.value
+  window.location.href = `${window.location.pathname}?year=${year}&month=${month}&week=${week}`;
 }
 
 function editInput(elementId) {
