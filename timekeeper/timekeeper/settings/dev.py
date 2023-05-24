@@ -3,14 +3,14 @@ from pathlib import Path
 
 import environ
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 root = environ.Path()
 env = environ.Env()
 env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = env.str("SECRET_KEY", default="changeme")
 
-DEBUG = env.bool("DEBUG", default=False)
+DEBUG = True
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS_ENV = env.str("ALLOWED_HOSTS", default="")
@@ -86,7 +86,7 @@ AUTH_USER_MODEL = 'auths.CustomUser'
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/London"
 
 USE_I18N = True
 

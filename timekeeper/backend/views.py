@@ -24,6 +24,7 @@ MONTHS = {
     12: 'December',
 }
 
+
 def index(request):
     return redirect("/auths")
 
@@ -39,6 +40,7 @@ def history(request):
 
     if request.method == "POST":
         save_record(request)
+
         return redirect(f"/history?{CURRENT_WEEK}")
     else:
         context = query_records(request)
@@ -127,6 +129,13 @@ def include(request):
             record.create_record(
                 user, "Wating Approval", 'Clock-out', date, clockout_time, break_duration, remarks)
 
+        if (clockin_time):
+            record.create_record(
+                user, "Wating Approval", 'Clock-in', date, clockin_time, break_duration, remarks)
+
+        if (clockout_time):
+            record.create_record(
+                user, "Wating Approval", 'Clock-out', date, clockout_time, break_duration, remarks)
         return redirect(f"/history?{CURRENT_WEEK}")
     else:
         return render(request, "backend/include.html")
@@ -181,6 +190,7 @@ def user(request, user_id):
             edited_record = Record.objects.get(id=request.POST.get("id"))
             date = request.POST.get("date")
             time = request.POST.get("time")
+            
             edited_record.date = record.get_date(date, time)
             edited_record.action = request.POST.get("action")
             edited_record.status = request.POST.get("status")

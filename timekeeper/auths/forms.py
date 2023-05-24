@@ -6,11 +6,11 @@ from auths.models import CustomUser
 
 class PasswordChangingForm(PasswordChangeForm):
     old_password = forms.CharField(widget=forms.PasswordInput(
-        attrs={"class": "form-control"}), required=True)
+        attrs={"class": "form-control password-input", }), required=True)
     new_password1 = forms.CharField(widget=forms.PasswordInput(
-        attrs={"class": "form-control"}), required=True)
+        attrs={"class": "form-control password-input"}), required=True)
     new_password2 = forms.CharField(widget=forms.PasswordInput(
-        attrs={"class": "form-control"}), required=True)
+        attrs={"class": "form-control password-input"}), required=True)
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
