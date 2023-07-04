@@ -16,6 +16,7 @@ class Record(models.Model):
     status = models.CharField(max_length=20, default='Wating Approval')
     break_duration = models.IntegerField(default=0)
     remarks = models.CharField(max_length=255, default='')
+    off_day = models.BooleanField(default=False)
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -49,6 +50,16 @@ class Record(models.Model):
             record.remarks = remarks
 
         record.save()
+
+    def create_off_day(self, username, date):
+        user = CustomUser.objects.filter(username=username)[0]
+        
+        off_day = Record()
+        off_day.user = user
+        off_day.date = self.get_date(date, "00:00")
+        off_day.off_day = True
+        off_day.status = 'Approved'
+        off_day.save()
 
     def get_date(self, date, time):
         datetime_str = f'{date} {time}'
