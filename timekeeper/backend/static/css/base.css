@@ -4,9 +4,29 @@
   font-size: 16px;
 }
 
+.btn-primary {
+  background-color: #00729a !important;
+  border-color: transparent !important;
+}
+
+.btn-primary:hover {
+  background-color: #2EA3F2 !important;
+}
+
+.close {
+  border: none;
+  background-color: transparent;
+}
+
+.close span {
+  font-size: 21px;
+}
+
 .nav-link {
   color: #282828 !important;
   font-weight: 600 !important;
+  border: none;
+  background-color: transparent;
 }
 
 .nav-link.active {
