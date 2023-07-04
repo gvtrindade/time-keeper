@@ -12,4 +12,5 @@ urlpatterns = [
     path("users/<int:user_id>", views.user, name="user"),
     path("delete_record/<int:record_id>",
          views.delete_record, name="delete_record"),
+    path("export", views.export_records, name="export_records")
 ]

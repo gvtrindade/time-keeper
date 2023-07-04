@@ -2,9 +2,11 @@ from datetime import datetime
 
 from auths.models import CustomUser
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
+import json
 
+from .utils.workbook import create_file
 from .models import Record
 
 CURRENT_WEEK = f"year={datetime.now().year}&month={datetime.now().month}&week={datetime.now().strftime('%V')}"
@@ -251,6 +253,25 @@ def delete_record(request, record_id):
         record = Record.objects.get(pk=record_id)
         record.delete()
         return HttpResponseRedirect("/history")
+    
+    
+def export_records(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        messages.success(request, "You must login to access this page")
+        return redirect("/auths")
+    elif not request.user.is_password_reset:
+            messages.success(
+                request, "You must reset your password before accessing the application")
+            return redirect("/auths/change-password")
+
+    data = json.loads(request.body.decode('utf-8'))
+    year =  data.get('year')
+    weeks = data.get('weeks')
+    # weeks = [number]
+    stream = create_file(year, weeks)
+
+    response = HttpResponse(content=stream, content_type="application/vnd.ms-excel")
+    return response
 
 
 def handler404(request, exception):

@@ -3,6 +3,76 @@
 <div class="my-2 text-center">
   {% csrf_token %}
   <h2 class="mb-3 fs-1">Volunteers</h2>
+
+  <button
+    type="button"
+    class="exportIcon btn btn-primary my-2"
+    data-bs-toggle="modal"
+    data-bs-target="#exportModal"
+    data-toggle="modal"
+    data-target="#exportModal"
+  >
+    Export Records
+    <i class="bi bi-file-earmark-arrow-up"></i>
+  </button>
+
+  <div
+    class="modal fade"
+    id="exportModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exportModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      {% csrf_token %}
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exportModalLabel">Export Records</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <nav aria-label="Week/Month navigation" class="border rounded mb-4" style="width: fit-content; margin: 0 auto">
+            <div class="topSection border-bottom">
+              <select class="yearExport border-0 py-1" onchange="updateCheckboxes()" style="width: 100%; text-align: center">
+                {% for year in years %}
+                <option value="{{year}}" label='{{year}}' 
+                  {% if year == selectedYear|add:0 %} selected {% endif %}
+                >
+                {% endfor %}
+              </select>
+              <hr style="margin: 0">
+              
+              <select class="monthExport border-0 py-1" onchange="updateCheckboxes()" style="width: 100%; text-align: center">
+                {% for key, value in months.items %}
+                <option value="{{key}}" label="{{value}}"  
+                  {% if key == selectedMonth|add:0 %} selected {% endif %}
+                ></option>
+                {% endfor %}
+              </select>
+            </div>
+          </nav>
+
+          <div class="checkboxes"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="downloadFile()">Export Records</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <table class="table table-striped">
     <tr>
       <th>Id</th>
