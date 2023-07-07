@@ -27,6 +27,7 @@ MONTHS = {
 }
 
 
+
 def index(request):
     return redirect("/auths")
 
