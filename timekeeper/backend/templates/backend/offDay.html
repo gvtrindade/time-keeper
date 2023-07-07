@@ -1,0 +1,29 @@
+{% extends 'backend/base.html' %} {% load static %} {% block content%}
+<div class="my-2 text-center">
+  <h2 class="mb-3 fs-1">Register Off Day</h2>
+  <form action="" method="post">
+    {% csrf_token %}
+    <div class="input-group flex-nowrap my-2">
+      <select id="selectUser" class="border-0 py-1" name="user" style="width: 100%; text-align: center">
+        {% for user, name in users.items %}
+        <option value="{{user}}" label='{{name}}'>
+        {% endfor %}
+      </select>
+      <label class="input-group-text" for="volunteer">Volunteer</label>
+    </div>
+
+    <div class="input-group flex-nowrap my-2">
+      <label class="input-group-text" for="date">Date</label>
+      <input type="date" class="form-control" name="date" />
+    </div>
+
+    <input
+      type="submit"
+      class="btn btn-primary"
+      value="Include Record"
+      required
+    />
+  </form>
+</div>
+<script src="{% static 'js/include.js' %}"></script>
+{% endblock %}

@@ -1,3 +1,4 @@
+import calendar
 from datetime import datetime, timedelta
 from django.db import models
 from django.db.models import Q
@@ -15,21 +16,22 @@ class Record(models.Model):
     status = models.CharField(max_length=20, default='Wating Approval')
     break_duration = models.IntegerField(default=0)
     remarks = models.CharField(max_length=255, default='')
+    off_day = models.BooleanField(default=False)
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.SIXTY_SECONDS = 60
-        self.ZERO_HOUR = 0
-        self.TWELVE_HOURS = 12
-        self.TWENTY_FOUR_HOURS = 24
+        self.sixty_seconds = 60
+        self.zero_hour = 0
+        self.twelve_hours = 12
+        self.twenty_four_hours = 24
 
-    def get_records(self, user, year=datetime.now().year, number=datetime.now().strftime("%V"), is_month=False):
+    def get_records(self, user, year=datetime.now().year, week=int(datetime.now().strftime("%V")), month=None):
         query = Q(user=user, date__year=year)
 
-        if is_month:
-            query.add(Q(date__month=number), "AND")
+        if month:
+            query.add(Q(date__month=month), "AND")
         else:
-            query.add(Q(date__week=number), "AND")
+            query.add(Q(date__week=week), "AND")
 
         return Record.objects.filter(query).order_by("date__day", "date__hour")
 
@@ -48,6 +50,16 @@ class Record(models.Model):
             record.remarks = remarks
 
         record.save()
+
+    def create_off_day(self, username, date):
+        user = CustomUser.objects.filter(username=username)[0]
+        
+        off_day = Record()
+        off_day.user = user
+        off_day.date = self.get_date(date, "00:00")
+        off_day.off_day = True
+        off_day.status = 'Approved'
+        off_day.save()
 
     def get_date(self, date, time):
         datetime_str = f'{date} {time}'
@@ -77,6 +89,45 @@ class Record(models.Model):
                 break_duration_sum += records[record_index + 1].break_duration
 
         worked_seconds = worked_hours.seconds - \
-            (break_duration_sum * self.SIXTY_SECONDS)
+            (break_duration_sum * self.sixty_seconds)
 
         return "{:02}h{:02}".format(worked_seconds // 3600, worked_seconds % 3600 // 60)
+
+    def get_weeks_in_month(self, year, month):
+        first_week = int(datetime(year, month, 1).strftime('%V'))
+        last_day_of_month = calendar.monthrange(year, month)[1]
+        last_week = int(datetime(year, month, last_day_of_month).strftime('%V')) + 1
+
+        return [*range(first_week, last_week)]
+
+    def get_week_days(self, year, week_number):
+        date = f'{year}-W{week_number}'
+        reference_day = datetime.strptime(date + '-1', "%Y-W%W-%w")
+        fist_day = self.ordinal_number(reference_day.day)
+
+        reference_day = reference_day + timedelta(days=6)
+        last_day = self.ordinal_number(reference_day.day)
+
+        return f'{fist_day} - {last_day}'
+
+    def ordinal_number(self, number):
+        suffix = None
+        match number:
+            case 1 | 21 | 31:
+                suffix = 'st'
+            case 2 | 22:
+                suffix = 'nd'
+            case 3 | 23:
+                suffix = 'rd'
+            case _:
+                suffix = 'th'
+        return f'{number}{suffix}'
+
+    def get_filter_options(self, year, month):
+        options = {}
+        weeks = self.get_weeks_in_month(year, month)
+        for week in weeks:
+            week_days = self.get_week_days(year, week)
+            options[week] = week_days
+        return options
+    
