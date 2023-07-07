@@ -29,7 +29,7 @@ def write_file_data(worksheet, year, week):
     global users_starting_row
     global biggest_name_size
     users_starting_row = 4
-    biggest_name_size = 3
+    biggest_name_size = 7
 
     WORKSHEET = worksheet
     week_dates = get_week_dates(year, week)
@@ -178,7 +178,7 @@ def set_worksheet_styles() :
     global biggest_name_size
     columns = ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V']
     for column in columns:
-        WORKSHEET.column_dimensions[column].width = 6.07
+        WORKSHEET.column_dimensions[column].width = 7
     WORKSHEET.column_dimensions["A"].width = biggest_name_size
     WORKSHEET.column_dimensions["W"].width = 10.15
     WORKSHEET.column_dimensions.group(start="X", end="AMJ", hidden=True)

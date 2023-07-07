@@ -1,6 +1,21 @@
 csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value
 updateCheckboxes(0)
 
+const MONTHS = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+]
+
 function updateCheckboxes() {
     const year = document.querySelector('.yearExport').value
     const month = parseInt(document.querySelector('.monthExport').value) - 1
@@ -108,7 +123,7 @@ async function downloadFile() {
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `${year} - ${month}.xlsx`
+        a.download = `${year} - ${MONTHS[month]}.xlsx`
         document.body.appendChild(a)
         a.click()
         a.remove()
