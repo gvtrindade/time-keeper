@@ -105,12 +105,12 @@ def write_user_data(year, week):
     global users_starting_row
     global biggest_name_size
 
-    users = CustomUser.objects.all()
+
+    users = CustomUser.objects.all().exclude(username='admin')
     record = Record()
     for user in users:
         records = record.get_records(user, year, week)
-
-        if user.is_staff and len(records) == 0: return
+        if user.is_staff and len(records) == 0: continue
 
         populate_cell(users_starting_row, column=1, value=f'{user.first_name} {user.last_name}', color=GRAY_COLOR)
 
