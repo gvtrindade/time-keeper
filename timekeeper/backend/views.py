@@ -180,7 +180,7 @@ def user_list(request):
         messages.success(request, "You can't access this page")
         return redirect(f"/history?{CURRENT_WEEK}")
 
-    users = CustomUser.objects.all
+    users = CustomUser.objects.all().exclude(username='admin')
     earliest_record = (
         Record.objects.earliest(
             "date__year").date.year
