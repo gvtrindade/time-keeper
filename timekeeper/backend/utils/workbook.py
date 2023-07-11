@@ -110,6 +110,7 @@ def write_user_data(year, week):
     record = Record()
     for user in users:
         records = record.get_records(user, year, week)
+
         if user.is_staff and len(records) == 0: pass
 
         populate_cell(users_starting_row, column=1, value=f'{user.first_name} {user.last_name}', color=GRAY_COLOR)
