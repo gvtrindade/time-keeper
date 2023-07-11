@@ -49,140 +49,142 @@
     </nav>
   </div>
 
-  <table class="table table-striped">
-    <tr>
-      <th scope="col">Date</th>
-      <th scope="col">Time</th>
-      <th scope="col">Action</th>
-      <th scope="col">Break Duration</th>
-      <th scope="col">Status</th>
-      {% if not isHistory %}
-      <th></th>
-      {% endif %}
-    </tr>
-
-    {% if records %}
-    {% for record in records %}
-    <tr>
-        <form action="" method="post">
-          {% csrf_token %}
-          <td>
-            {% if isHistory %}
-            {{ record.date|date:'d/m' }}
-            {% else %}
-            <input type="date" class="form-control" name="date" value="{{ record.date|date:'Y-m-d' }}" />
-            {% endif %}
-          </td>
-
-          <td>
-            {% if record.off_day %}
-
-            {% elif isHistory %}
-            {{ record.date|date:'H:i' }}
-            {% else %}
-            <input type="time" class="form-control" name="time" value="{{ record.date|date:'H:i' }}" />
-            {% endif %}
-          </td>
-
-          <td>
-            {% if record.off_day %}
-
-            {% elif isHistory %}
-            {{ record.action }}
-            {% else %}
-            <select name="action" id="action{{record.id}}" class="action form-select">
-              <option value="Clock-in" {% if record.action == "Clock-in" %} selected {% endif %}>Clock-in</option>
-              <option value="Clock-out" {% if record.action == "Clock-out" %} selected {% endif %}>Clock-out</option>
-            </select>
-            {% endif %}
-          </td>
-
-          <td style="vertical-align: middle;">
-            {% if record.off_day %}
-            <strong> Off Day </strong>
-            {% elif isHistory %}
-            {{ record.break_duration }}
-            {% else %}
-              <input type="text" class="form-control" name="breakDuration" value="{{ record.break_duration }}"
-                     style="max-width: 3em" {% if record.action == "Clock-in" %} disabled {% endif %} />
-            {% endif %}
-          </td>
-
-          <td>
-            {% if record.off_day %}
+  <div style="overflow-x: auto;">
+    <table class="table table-striped">
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Time</th>
+        <th scope="col">Action</th>
+        <th scope="col">Break Duration</th>
+        <th scope="col">Status</th>
+        {% if not isHistory %}
+        <th></th>
+        {% endif %}
+      </tr>
+  
+      {% if records %}
+      {% for record in records %}
+      <tr>
+          <form action="" method="post">
+            {% csrf_token %}
+            <td>
+              {% if isHistory %}
+              {{ record.date|date:'d/m' }}
+              {% else %}
+              <input type="date" class="form-control" name="date" value="{{ record.date|date:'Y-m-d' }}" />
+              {% endif %}
+            </td>
+  
+            <td>
+              {% if record.off_day %}
+  
+              {% elif isHistory %}
+              {{ record.date|date:'H:i' }}
+              {% else %}
+              <input type="time" class="form-control" name="time" value="{{ record.date|date:'H:i' }}" />
+              {% endif %}
+            </td>
+  
+            <td>
+              {% if record.off_day %}
+  
+              {% elif isHistory %}
+              {{ record.action }}
+              {% else %}
+              <select name="action" id="action{{record.id}}" class="action form-select">
+                <option value="Clock-in" {% if record.action == "Clock-in" %} selected {% endif %}>Clock-in</option>
+                <option value="Clock-out" {% if record.action == "Clock-out" %} selected {% endif %}>Clock-out</option>
+              </select>
+              {% endif %}
+            </td>
+  
+            <td style="vertical-align: middle;">
+              {% if record.off_day %}
+              <strong> Day Off </strong>
+              {% elif isHistory %}
+              {{ record.break_duration }}
+              {% else %}
+                <input type="text" class="form-control" name="breakDuration" value="{{ record.break_duration }}"
+                       style="max-width: 3em" {% if record.action == "Clock-in" %} disabled {% endif %} />
+              {% endif %}
+            </td>
+  
+            <td>
+              {% if record.off_day %}
+              
+              {% elif isHistory %}
+                {{ record.status }}
+              {% else %}
+              <select name="status" id="status{{record.id}}" class="status form-select">
+                <option value="Approved" 
+                  {% if record.status == "Approved" %} selected {% endif %}
+                >
+                  Approved
+                </option>
+  
+                <option value="Wating Approval" 
+                  {% if record.status == "Wating Approval" %} selected {% endif %}
+                >
+                  Wating Approval
+                </option>
+              </select>
+              <input type="text" name="id" value="{{record.id}}" hidden>
+              {% endif %}
+            </td>
             
-            {% elif isHistory %}
-              {{ record.status }}
-            {% else %}
-            <select name="status" id="status{{record.id}}" class="status form-select">
-              <option value="Approved" 
-                {% if record.status == "Approved" %} selected {% endif %}
+            {% if not isHistory %}
+            <td>
+              <input class="btn btn-primary" type="submit" value="Save" />
+              {% if record.off_day %}
+              <button
+                type="button"
+                class="btn btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#confirmModal"
+                data-toggle="modal"
+                data-target="#confirmModal"
+                onclick="showDeleteConfirmModal('record', '{{ record.date|date:'d/m' }} - Off day', {{ record.id }})"
               >
-                Approved
-              </option>
-
-              <option value="Wating Approval" 
-                {% if record.status == "Wating Approval" %} selected {% endif %}
+                <i class="bi bi-trash"></i>
+              </button>
+              {% else %}
+              <button
+                type="button"
+                class="btn btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#confirmModal"
+                data-toggle="modal"
+                data-target="#confirmModal"
+                onclick="showDeleteConfirmModal('record', '{{ record.date|date:'d/m' }} - {{ record.date|date:'H:i' }} - {{ record.action }}', {{ record.id }})"
               >
-                Wating Approval
-              </option>
-            </select>
-            <input type="text" name="id" value="{{record.id}}" hidden>
+                <i class="bi bi-trash"></i>
+              </button>
+              {% endif %}
+              {% if not record.remarks|length == 0 %}
+              <button type="button" class="btn btn-primary" onclick="showRemarks('{{record.id}}')">
+                <i class="bi bi-chat-left-text"></i>
+              </button>
+              {% endif %}
+            </td>
             {% endif %}
+          </form>
+        </tr>
+        {% if not isHistory %}
+        <tr hidden id="remarks{{record.id}}">
+          <td colspan="100%">
+            <textarea style="width: 100%; resize: none;" disabled>{{ record.remarks }}</textarea>
           </td>
-          
-          {% if not isHistory %}
-          <td>
-            <input class="btn btn-primary" type="submit" value="Save" />
-            {% if record.off_day %}
-            <button
-              type="button"
-              class="btn btn-danger"
-              data-bs-toggle="modal"
-              data-bs-target="#confirmModal"
-              data-toggle="modal"
-              data-target="#confirmModal"
-              onclick="showDeleteConfirmModal('record', '{{ record.date|date:'d/m' }} - Off day', {{ record.id }})"
-            >
-              <i class="bi bi-trash"></i>
-            </button>
-            {% else %}
-            <button
-              type="button"
-              class="btn btn-danger"
-              data-bs-toggle="modal"
-              data-bs-target="#confirmModal"
-              data-toggle="modal"
-              data-target="#confirmModal"
-              onclick="showDeleteConfirmModal('record', '{{ record.date|date:'d/m' }} - {{ record.date|date:'H:i' }} - {{ record.action }}', {{ record.id }})"
-            >
-              <i class="bi bi-trash"></i>
-            </button>
-            {% endif %}
-            {% if not record.remarks|length == 0 %}
-            <button type="button" class="btn btn-primary" onclick="showRemarks('{{record.id}}')">
-              <i class="bi bi-chat-left-text"></i>
-            </button>
-            {% endif %}
-          </td>
-          {% endif %}
-        </form>
+        </tr>
+  {% endif %}
+        {% endfor %}
+      {% else %}
+      <tr>
+        <td colspan="100%" class="text-center">No records found</td>
       </tr>
-      {% if not isHistory %}
-      <tr hidden id="remarks{{record.id}}">
-        <td colspan="100%">
-          <textarea style="width: 100%; resize: none;" disabled>{{ record.remarks }}</textarea>
-        </td>
-      </tr>
-{% endif %}
-      {% endfor %}
-    {% else %}
-    <tr>
-      <td colspan="100%" class="text-center">No records found</td>
-    </tr>
-    {% endif %}
-
-  </table>
+      {% endif %}
+  
+    </table>
+  </div>
 </div>
 
 <script src="{% static 'js/historyTable.js' %}"></script>

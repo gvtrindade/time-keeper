@@ -44,3 +44,20 @@
 .password-button:hover {
   background-color: #d9d9da !important;
 }
+
+.logout-desktop {
+  display: none !important;
+}
+
+.logout-mobile {
+  display: block !important;
+}
+
+@media screen and (min-width: 990px) {
+  .logout-desktop {
+    display: block !important;
+  }
+  .logout-mobile {
+    display: none !important;
+  }
+}
