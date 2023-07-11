@@ -110,7 +110,8 @@ def write_user_data(year, week):
     record = Record()
     for user in users:
         records = record.get_records(user, year, week)
-        if user.is_staff and len(records) == 0: continue
+
+        if user.is_staff and len(records) == 0: pass
 
         populate_cell(users_starting_row, column=1, value=f'{user.first_name} {user.last_name}', color=GRAY_COLOR)
 
@@ -141,7 +142,8 @@ def write_user_data(year, week):
                 except KeyError:
                     pass
 
-                populate_cell(assigned_row, assigned_column, record.date.strftime('%H:%M'), font_bold=False)
+                date = record.date + timedelta(minutes=60)
+                populate_cell(assigned_row, assigned_column, date.strftime('%H:%M'), font_bold=False)
 
             else:
                 if not is_cell_empty(assigned_row, assigned_column + 1):

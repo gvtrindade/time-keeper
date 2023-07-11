@@ -30,40 +30,40 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
+          style="line-height: 0; padding: 0; border: none;">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
         <a
           class="navbar-brand"
           href="{% url 'backend:history' %}?year={% now 'Y' %}&month={% now 'm' %}&week={% now 'W' %}"
           style="
             font-family: Georgia;
-            font-size: 1.5rem;
+            font-size: min(6vw, 1.5rem);
             letter-spacing: 0;
             font-style: italic;
+            margin: 0;
           "
         >
           <img
             src="{% static 'images/logo_512x512.png' %}"
-            class="me-2"
-            width="48"
+            style="width: 25%; max-width: 48px; margin-right: min(20%, .5em)"
             alt="Christian Endeavour Holiday Centres"
             id="logo"
           />
           TimeKeeper</a
         >
 
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="float-end logout-mobile">
+          <a class="nav-link" href="{% url 'auths:logout' %}">
+            <i class="bi bi-box-arrow-right mx-2" style="font-size:24px"></i>
+          </a>
+        </div>
 
         {% if user.is_authenticated %}
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="collapse navbar-collapse" id="navbarNav" style="margin-left: 1em">
           <ul class="navbar-nav">
             <li class="nav-item">
               <a
@@ -94,7 +94,7 @@
                   <a
                     class="dropdown-item"
                     href="{% url 'backend:off_day' %}"
-                    >Off Day</a
+                    >Day Off</a
                   >
                 </div>
               </div>
@@ -130,9 +130,25 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'auths:logout' %}">Logout</a>
+              <button
+                type="button"
+                class="exportButton nav-link"
+                data-bs-toggle="modal"
+                data-bs-target="#exportModal"
+                data-toggle="modal"
+                data-target="#exportModal"
+              >
+                Export Records
+                <i class="bi bi-file-earmark-arrow-up"></i>
+              </button>
             </li>
           </ul>
+        </div>
+        
+        <div class="float-end logout-desktop">
+          <a class="nav-link" href="{% url 'auths:logout' %}">
+            <i class="bi bi-box-arrow-right mx-2" style="font-size:24px"></i>
+          </a>
         </div>
         {% endif %}
       </div>
